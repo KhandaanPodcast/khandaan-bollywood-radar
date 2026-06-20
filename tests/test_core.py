@@ -1,0 +1,206 @@
+import tempfile
+import unittest
+from datetime import datetime, timezone
+from pathlib import Path
+
+from khandaan_radar.dedupe import canonical_url, deduplicate_stories
+from khandaan_radar.briefing import render_briefing
+from khandaan_radar.dashboard import render_dashboard
+from khandaan_radar.models import Story, Submission
+from khandaan_radar.scoring import rank_stories
+from khandaan_radar.submissions import group_submissions, load_submissions
+from khandaan_radar.summarizer import fallback_editorial
+
+
+class CoreTests(unittest.TestCase):
+    def test_canonical_url_removes_tracking(self):
+        self.assertEqual(
+            canonical_url("https://www.example.com/a/?utm_source=x&id=2#top"),
+            "https://example.com/a?id=2",
+        )
+
+    def test_story_deduplication_by_similar_title(self):
+        stories = [
+            Story("Aamir Khan announces a new film", "https://a.test/1", "news", score=2),
+            Story("Aamir Khan announces new film", "https://b.test/2", "news", score=1),
+        ]
+        self.assertEqual(len(deduplicate_stories(stories)), 1)
+
+    def test_listener_csv_and_grouping(self):
+        with tempfile.TemporaryDirectory() as directory:
+            tmp_path = Path(directory)
+            csv_path = tmp_path / "listeners.csv"
+            csv_path.write_text(
+                "story_link,summary,source_platform,why_it_matters,submitter_name,credit_permission,patreon_member\n"
+                "https://example.com/a?utm_source=x,Trailer reaction,YouTube,Big visual moment,Asha,yes,no\n"
+                "https://example.com/a,Trailer reaction,YouTube,Patrons requested it,Dev,no,yes\n",
+                encoding="utf-8",
+            )
+            result = group_submissions(load_submissions(str(csv_path), tmp_path))
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].duplicate_count, 2)
+        self.assertTrue(result[0].patreon_member)
+        self.assertEqual(result[0].submitters, ["Asha"])
+        self.assertEqual(result[0].recommendation, "reel")
+        self.assertGreater(result[0].priority_score, 0)
+        self.assertEqual(result[0].topic_category, "trailer / music / craft")
+
+    def test_rule_based_story_scoring(self):
+        story = Story(
+            "Trailer earns praise and backlash from rival fandoms",
+            "https://example.com/trailer",
+            "X (manual)",
+            summary="Fans love the visuals, but angry posts call it the worst teaser.",
+        )
+        ranked = rank_stories([story])
+        self.assertGreater(ranked[0].priority_score, 0)
+        self.assertEqual(ranked[0].topic_category, "fan culture / controversy")
+        self.assertEqual(ranked[0].audience_temperature, "mixed")
+        self.assertIn(ranked[0].output_recommendation, {"Reel", "Shorts", "Main Episode", "Patreon Discussion", "Newsletter", "Ignore"})
+        self.assertIn("Fan War", ranked[0].badges)
+        self.assertGreater(ranked[0].discussion_score, 0)
+        self.assertGreater(ranked[0].controversy_score, 0)
+        self.assertGreater(ranked[0].engagement_score, 0)
+        self.assertGreater(ranked[0].confidence_score, 0)
+        self.assertTrue(ranked[0].editorial_angle)
+        self.assertTrue(ranked[0].suggested_hook)
+        self.assertTrue(ranked[0].suggested_patron_poll)
+        self.assertTrue(ranked[0].khandaan_take)
+
+    def test_dashboard_badges(self):
+        story = Story(
+            "Rumour: casting changes for streaming film after box office result",
+            "https://example.com/badges",
+            "Google News",
+            summary="An unconfirmed studio report discusses the release strategy.",
+        )
+        scored = rank_stories([story])[0]
+        for badge in {"Industry Trend", "Film Release", "Streaming", "Casting", "Rumour", "Box Office"}:
+            self.assertIn(badge, scored.badges)
+        self.assertLess(scored.confidence_score, 76)
+
+    def test_editorial_briefing_sections_render_offline(self):
+        stories = rank_stories([
+            Story(
+                "Studio announces a major streaming deal",
+                "https://example.com/deal",
+                "X (manual)",
+                summary="The industry deal could change release strategy.",
+            )
+        ])
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "briefing.md"
+            render_briefing(output, stories, [], [], [], fallback_editorial())
+            text = output.read_text(encoding="utf-8")
+        required = [
+            "Executive Summary", "Khandaan Take", "Top 3 Stories to Discuss",
+            "Best Patreon Discussion", "Best Reel and Shorts Ideas", "Main Episode Candidates",
+            "Fan War Watch", "Industry Trend Watch", "Listener Submissions", "Ignore",
+            "If We Recorded Tonight", "Discussion", "Priority", "Controversy",
+            "Engagement", "Confidence", "Badges", "Output", "Editorial note",
+            "Opening hook", "Patron poll",
+        ]
+        for heading in required:
+            self.assertIn(heading, text)
+
+    def test_briefing_sorts_by_discussion_score(self):
+        lower_priority = Story("High discussion", "", "manual", priority_score=20, discussion_score=90, output_recommendation="Main Episode", khandaan_take="Talk about this.")
+        higher_priority = Story("High priority", "", "manual", priority_score=95, discussion_score=40, output_recommendation="Newsletter", khandaan_take="Less to discuss.")
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "briefing.md"
+            render_briefing(output, [higher_priority, lower_priority], [], [], [], fallback_editorial())
+            text = output.read_text(encoding="utf-8")
+        shortlist = text.split("## 11. If We Recorded Tonight", 1)[1]
+        self.assertLess(shortlist.index("High discussion"), shortlist.index("High priority"))
+
+    def test_visual_dashboard_renders_locally(self):
+        breaking = Story(
+            "Big fan debate",
+            "https://example.com/fans",
+            "Google News",
+            published_at=datetime.now(timezone.utc),
+            priority_score=82,
+            discussion_score=78,
+            controversy_score=88,
+            engagement_score=72,
+            confidence_score=84,
+            badges=["Fan War"],
+            output_recommendation="Main Episode",
+            khandaan_take="This is worth discussing.",
+            editorial_angle="Find the real argument.",
+            suggested_hook="What are fans actually debating?",
+            suggested_patron_poll="Is this debate useful?",
+            image_url="https://images.example.com/poster.jpg",
+            trend_direction="up",
+        )
+        reel = Submission(
+            "https://example.com/reel", "Trailer reaction", "YouTube", "Strong visual", "Asha", True, True,
+            priority_score=70, discussion_score=64, controversy_score=20,
+            engagement_score=80, confidence_score=68, badges=["Film Release"],
+            output_recommendation="Reel", khandaan_take="The trailer has done its job.",
+            editorial_angle="Judge the craft.", suggested_hook="Does the film look good?",
+            suggested_patron_poll="Are you seated?",
+        )
+        ignored = Story("Unconfirmed casting", "", "manual", priority_score=20, discussion_score=25, output_recommendation="Ignore", khandaan_take="Wait for facts.")
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "dashboard.html"
+            markdown = Path(directory) / "exports" / "briefing.md"
+            render_dashboard(output, [breaking, ignored], [], [], [reel], markdown_path=markdown)
+            text = output.read_text(encoding="utf-8")
+        for value in (
+            "If We Recorded Tonight", "Best Reel Opportunities", "Best Patreon Discussions",
+            "Stories To Ignore", "HIGH INTEREST", "FAN WAR", "PATREON", "BREAKING",
+            "REEL IDEA", "PODCAST", "priority-ring", "exports/briefing.md",
+            "poster.jpg", "UP", "under 1h old", "Discussion /10", "Fan-war /10",
+            "CONFIRMED SIGNAL", "Open source", "Copy podcast notes", "Copy reel idea",
+            "Copy Patreon post", "data-copy-target", "PODCAST NOTES", "REEL IDEA",
+            "PATREON POST", "fallbackCopy", "KHANDAAN", "BOLLYWOOD <em>RADAR</em>",
+            "What Bollywood fans are <em>actually talking about.</em>",
+            "The stories, debates, fan wars and industry shifts shaping Bollywood this week. Powered by news, Reddit discussions, X conversations and audience submissions.",
+            "Bollywood news, Bollywood Reddit, Bollywood gossip, Bollywood box office, Hindi cinema, Bollywood podcast, Khandaan Podcast, Bollywood discussions, Bollywood trends",
+            "Khandaan Bollywood Radar combines news, fan discussions, Reddit conversations, X chatter and listener submissions to surface the Bollywood stories worth talking about.",
+            "Produced by Khandaan: A Bollywood Podcast", "https://www.youtube.com/@KhandaanPodcast",
+        ):
+            self.assertIn(value, text)
+        self.assertNotIn("<script src=", text)
+
+    def test_story_age_and_trend_heuristics(self):
+        recent = Story(
+            "Official trailer released",
+            "https://example.com/new",
+            "Google News",
+            published_at=datetime.now(timezone.utc),
+            summary="The studio confirmed the release.",
+        )
+        scored = rank_stories([recent])[0]
+        self.assertEqual(scored.trend_direction, "new")
+        self.assertEqual(scored.age_label, "under 1h old")
+
+    def test_self_contained_share_dashboard(self):
+        story = Story(
+            "Shareable story", "https://example.com/source", "Google News",
+            priority_score=70, discussion_score=65, confidence_score=75,
+            output_recommendation="Main Episode", image_url="https://images.example.com/remote.jpg",
+            khandaan_take="This travels well.", editorial_angle="Discuss it.",
+            suggested_hook="Ready?", suggested_patron_poll="Yes or no?",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "share_dashboard.html"
+            render_dashboard(
+                output, [story], [], [], [], self_contained=True, fetch_images=False,
+                public_url="https://example.github.io/khandaan/",
+            )
+            text = output.read_text(encoding="utf-8")
+        for marker in (
+            "Share dashboard", "Download HTML", "shareDashboard", "downloadDashboard",
+            "navigator.share", "https://example.github.io/khandaan/", 'rel="canonical"',
+            "Static share edition", "@media (max-width:560px)", "viewport",
+            '<title>Khandaan Bollywood Radar</title>', 'name="keywords"',
+            'property="og:title"', 'name="twitter:description"',
+        ):
+            self.assertIn(marker, text)
+        self.assertNotIn("images.example.com/remote.jpg", text)
+
+
+if __name__ == "__main__":
+    unittest.main()

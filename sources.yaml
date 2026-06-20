@@ -1,0 +1,32 @@
+google_news:
+  enabled: true
+  language: en-IN
+  country: IN
+  keywords:
+    - Bollywood
+    - Hindi cinema
+    - Shah Rukh Khan
+    - Salman Khan
+    - Aamir Khan
+  max_items_per_keyword: 10
+
+reddit:
+  enabled: true
+  subreddits:
+    - bollywood
+    - BollyBlindsNGossip
+  sort: hot
+  limit_per_subreddit: 15
+
+x_inputs:
+  file: x_inputs.md
+
+listener_submissions:
+  # Use a local CSV path, an HTTPS CSV export, or a public Google Sheet URL.
+  source: listener_submissions.csv
+
+briefing:
+  top_stories: 8
+  reddit_items: 6
+  listener_items: 8
+

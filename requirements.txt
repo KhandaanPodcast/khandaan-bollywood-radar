@@ -1,0 +1,6 @@
+feedparser>=6.0,<7
+openai>=1.30,<2
+python-dotenv>=1.0,<2
+PyYAML>=6.0,<7
+requests>=2.31,<3
+
