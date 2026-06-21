@@ -16,7 +16,7 @@ from .models import Story, Submission
 DashboardItem = Union[Story, Submission]
 
 BRAND_TITLE = "Khandaan Bollywood Radar"
-BRAND_SUBTITLE = "What Bollywood fans are actually talking about."
+BRAND_SUBTITLE = "What Bollywood fans are talking about this week"
 SEO_DESCRIPTION = "The stories, debates, fan wars and industry shifts shaping Bollywood this week. Powered by news, Reddit discussions, X conversations and audience submissions."
 SEO_KEYWORDS = "Bollywood news, Bollywood Reddit, Bollywood gossip, Bollywood box office, Hindi cinema, Bollywood podcast, Khandaan Podcast, Bollywood discussions, Bollywood trends"
 ABOUT_COPY = "Khandaan Bollywood Radar combines news, fan discussions, Reddit conversations, X chatter and listener submissions to surface the Bollywood stories worth talking about."
@@ -65,6 +65,12 @@ def _source(item: DashboardItem) -> str:
             return f"Reddit / r/{item.metadata.get('subreddit', 'unknown')}"
         return item.platform
     return f"Listener / {item.source_platform or 'unknown source'}"
+
+
+def _summary(item: DashboardItem) -> str:
+    if isinstance(item, Submission):
+        return item.why_it_matters
+    return item.summary
 
 
 def _dashboard_badges(item: DashboardItem) -> list[str]:
@@ -140,16 +146,8 @@ def _card(item: DashboardItem, card_id: str, *, rank: int | None = None, self_co
         f'<textarea id="{card_id}-reel" class="copy-payload" aria-hidden="true">{escape(reel_copy)}</textarea>',
         f'<textarea id="{card_id}-patreon" class="copy-payload" aria-hidden="true">{escape(patreon_copy)}</textarea>',
     ])
-    score_rows = (
-        ("Discussion", item.discussion_score, "pink"),
-        ("Controversy", item.controversy_score, "pink"),
-        ("Engagement", item.engagement_score, "yellow"),
-        ("Confidence", item.confidence_score, "yellow"),
-    )
-    meters = "".join(
-        f'<div class="meter"><span>{label}</span><div class="track"><i class="{colour}" style="width:{value:.0f}%"></i></div><b>{value:.0f}</b></div>'
-        for label, value, colour in score_rows
-    )
+    summary = escape(_summary(item))
+    summary_html = f'<p class="story-dek">{summary}</p>' if summary else ""
     listener_note = ""
     if isinstance(item, Submission):
         signals = [f"{item.duplicate_count} submission(s)"]
@@ -162,24 +160,19 @@ def _card(item: DashboardItem, card_id: str, *, rank: int | None = None, self_co
 <article class="story-card">
   <div class="media-wrap">{media}<div class="story-status"><span class="trend trend-{trend}">{trend_arrow} {trend.upper()}</span><span class="age">{escape(item.age_label)}</span></div></div>
   <div class="card-top">{rank_html}<div class="badge-row">{badges}</div></div>
-  <div class="card-main">
-    <div class="priority-ring" style="--score:{item.priority_score:.0f}%" aria-label="Priority score {item.priority_score:.0f} out of 100">
-      <span>{item.priority_score:.0f}</span><small>PRIORITY</small>
-    </div>
-    <div class="story-copy">
-      <p class="eyebrow">{escape(_source(item))} &middot; {escape(item.topic_category)}</p>
-      <h3>{linked_title}</h3>
-      <p class="recommendation">{escape(item.output_recommendation)}</p>
-    </div>
+  <div class="story-copy">
+    <p class="eyebrow">{escape(_source(item))} <span>&middot;</span> {escape(item.topic_category)}</p>
+    <h3>{linked_title}</h3>
+{summary_html}
   </div>
-  <div class="quick-scores">
-    <div><b>{item.discussion_score / 10:.1f}</b><span>Discussion /10</span></div>
-    <div><b>{item.controversy_score / 10:.1f}</b><span>Fan-war /10</span></div>
-    <div class="confidence-state confidence-{_confidence_label(item).lower().replace(' ', '-')} "><b>{item.confidence_score / 10:.1f}</b><span>{_confidence_label(item)}</span></div>
+  <div class="editorial-meta">
+    <div><b>{item.discussion_score:.0f}</b><span>Discussion</span></div>
+    <div><b>{item.controversy_score:.0f}</b><span>Heat</span></div>
+    <div><b>{item.confidence_score:.0f}</b><span>{_confidence_label(item)}</span></div>
+    <strong>{escape(item.output_recommendation)}</strong>
   </div>
-  <div class="meters">{meters}</div>
-  <blockquote><span>KHANDAAN TAKE</span>{escape(item.khandaan_take)}</blockquote>
-  {listener_note}
+  <blockquote><span>THE KHANDAAN ANGLE</span>{escape(item.khandaan_take)}</blockquote>
+{listener_note}
   <div class="card-actions">{source_link}<div class="copy-actions"><button type="button" data-copy-target="{card_id}-podcast">Copy podcast notes</button><button type="button" data-copy-target="{card_id}-reel">Copy reel idea</button><button type="button" data-copy-target="{card_id}-patreon">Copy Patreon post</button></div></div>
   {copy_payloads}
   <details>
@@ -223,11 +216,25 @@ def render_dashboard(
 ) -> None:
     sort_key = lambda item: (item.discussion_score, item.priority_score)
     all_items: list[DashboardItem] = sorted([*news, *reddit, *x_items, *submissions], key=sort_key, reverse=True)
-    tonight = [item for item in all_items if item.output_recommendation != "Ignore"][:5]
-    reels = [item for item in all_items if item.output_recommendation in {"Reel", "Shorts"}][:6]
-    patreon = [item for item in all_items if item.output_recommendation == "Patreon Discussion"][:6]
-    ignored = [item for item in all_items if item.output_recommendation == "Ignore"]
     active = [item for item in all_items if item.output_recommendation != "Ignore"]
+    tonight = active[:5]
+    trending = active[:8]
+    fan_war = sorted(active, key=lambda item: (item.controversy_score, item.discussion_score), reverse=True)[:5]
+    recent_submissions = sorted(
+        submissions,
+        key=lambda item: (
+            item.submitted_at is not None,
+            item.submitted_at.timestamp() if item.submitted_at else 0,
+        ),
+        reverse=True,
+    )[:6]
+    reels = sorted(
+        (item for item in active if item.output_recommendation in {"Reel", "Shorts"}),
+        key=lambda item: (item.engagement_score, item.discussion_score),
+        reverse=True,
+    )[:6]
+    patreon = [item for item in active if item.output_recommendation == "Patreon Discussion"][:6]
+    industry = [item for item in active if "Industry Trend" in item.badges][:6]
     high_interest = sum(item.discussion_score >= 60 for item in all_items)
     fan_wars = sum("Fan War" in item.badges for item in all_items)
     generated = datetime.now().astimezone().strftime("%d %B %Y &middot; %H:%M %Z")
@@ -237,12 +244,13 @@ def render_dashboard(
     canonical = f'<link rel="canonical" href="{safe_public_url}"><meta property="og:url" content="{safe_public_url}">' if safe_public_url else ""
     footer_export = "Static share edition: upload this one HTML file as-is." if self_contained else f'<a href="{markdown_href}">Open Markdown export</a>.'
     sections = "".join([
-        _section("tonight", "If We Recorded Tonight", "THE RUN OF SHOW", tonight, ranked=True, empty="No story earns the microphone tonight.", self_contained=self_contained, fetch_images=fetch_images),
-        _section("reels", "Best Reel Opportunities", "VERTICAL VIDEO", reels, empty="No visual story is strong enough for a reel yet.", self_contained=self_contained, fetch_images=fetch_images),
+        _section("tonight", "If We Recorded Tonight", "THE EDITOR'S FIVE", tonight, ranked=True, empty="No story earns the microphone tonight.", self_contained=self_contained, fetch_images=fetch_images),
+        _section("trending", "Trending Stories", "WHAT IS MOVING", trending, ranked=True, empty="No stories are trending yet.", self_contained=self_contained, fetch_images=fetch_images),
+        _section("fan-war", "Fan War Watch", "THE TEMPERATURE CHECK", fan_war, ranked=True, empty="The fandoms are unusually peaceful today.", self_contained=self_contained, fetch_images=fetch_images),
+        _section("listener-submissions", "Listener Submissions", "FROM THE AUDIENCE", recent_submissions, empty="No listener submissions collected.", self_contained=self_contained, fetch_images=fetch_images),
+        _section("reels", "Best Reel Opportunities", "CUT FOR VERTICAL", reels, empty="No visual story is strong enough for a reel yet.", self_contained=self_contained, fetch_images=fetch_images),
         _section("patreon", "Best Patreon Discussions", "FOR THE MEMBERS", patreon, empty="No story currently rewards a deeper Patreon conversation.", self_contained=self_contained, fetch_images=fetch_images),
-        _section("listener-submissions", "Listener Submissions", "FROM THE AUDIENCE", submissions, empty="No listener submissions collected.", self_contained=self_contained, fetch_images=fetch_images),
-        _section("all-stories", "All Ranked Stories", "THE FULL BOARD", active, empty="No active stories collected.", self_contained=self_contained, fetch_images=fetch_images),
-        _section("ignore", "Stories To Ignore", "SAVE YOUR ENERGY", ignored, empty="Nothing is being ignored today.", self_contained=self_contained, fetch_images=fetch_images),
+        _section("industry", "Industry Trend Watch", "BEYOND THE HEADLINES", industry, empty="No clear industry pattern has emerged yet.", self_contained=self_contained, fetch_images=fetch_images),
     ])
     html = f"""<!doctype html>
 <html lang="en">
@@ -261,50 +269,49 @@ def render_dashboard(
   {canonical}
   <title>{escape(BRAND_TITLE)}</title>
   <style>
-    :root {{ --ink:#0c0c0d; --panel:#171719; --panel-2:#202023; --line:#343438; --text:#f7f5ef; --muted:#aaa8a1; --yellow:#ffe600; --pink:#ff3d8d; --green:#71e6a0; }}
+    :root {{ --ink:#09090a; --panel:#151517; --panel-2:#1d1d20; --line:#333338; --text:#f8f6ef; --muted:#aaa7a0; --yellow:#ffe000; --pink:#ff3f8e; --green:#78e2a7; }}
     * {{ box-sizing:border-box; }}
     html {{ scroll-behavior:smooth; }}
     body {{ margin:0; background:var(--ink); color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }}
-    body::before {{ content:""; position:fixed; inset:0; pointer-events:none; opacity:.18; background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:38px 38px; mask-image:linear-gradient(to bottom,black,transparent 70%); }}
+    body::before {{ content:""; position:fixed; inset:0; pointer-events:none; opacity:.2; background:radial-gradient(circle at 10% 0,rgba(255,63,142,.13),transparent 30%),radial-gradient(circle at 90% 8%,rgba(255,224,0,.1),transparent 28%); }}
     a {{ color:inherit; text-decoration:none; }} a:hover {{ color:var(--yellow); }}
-    .shell {{ width:min(1420px,calc(100% - 40px)); margin:auto; position:relative; }}
-    header {{ padding:48px 0 30px; border-bottom:1px solid var(--line); }}
-    .brand-line {{ display:flex; align-items:center; justify-content:space-between; gap:20px; }}
-    .brand-actions {{ display:flex; align-items:center; gap:8px; }}
-    .share-button,.download-button {{ min-height:39px; padding:9px 14px; border:1px solid var(--line); border-radius:999px; background:var(--panel); color:var(--text); font:inherit; font-size:.72rem; font-weight:900; letter-spacing:.05em; text-transform:uppercase; cursor:pointer; }}
+    .shell {{ width:min(100% - 24px,1280px); margin:auto; position:relative; }}
+    header {{ padding:20px 0 25px; border-bottom:1px solid var(--line); }}
+    .brand-line {{ display:flex; align-items:flex-start; flex-direction:column; gap:22px; }}
+    .brand-actions {{ display:flex; width:100%; align-items:center; gap:8px; }}
+    .share-button,.download-button {{ flex:1; min-height:40px; padding:9px 12px; border:1px solid var(--line); border-radius:4px; background:var(--panel); color:var(--text); font:inherit; font-size:.66rem; font-weight:900; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; }}
     .share-button {{ color:var(--ink); border-color:var(--yellow); background:var(--yellow); }} .share-button:hover,.download-button:hover {{ border-color:var(--pink); background:var(--pink); color:white; }}
-    .share-status {{ min-height:1.4em; margin:8px 0 0; color:var(--muted); font-size:.7rem; text-align:right; }}
+    .share-status {{ min-height:1.4em; margin:8px 0 0; color:var(--muted); font-size:.7rem; }}
     .brand-lockup {{ display:flex; align-items:center; gap:13px; }}
-    .wordmark {{ display:flex; flex-direction:column; align-items:flex-start; line-height:.82; font-weight:950; letter-spacing:-.045em; }}
-    .wordmark-khandaan {{ color:var(--text); font-size:clamp(1rem,2vw,1.45rem); letter-spacing:.08em; }}
-    .wordmark-radar {{ position:relative; margin-top:8px; color:var(--yellow); font-size:clamp(1.55rem,3.5vw,2.65rem); }}
-    .wordmark-radar em {{ color:var(--pink); font-style:normal; }} .wordmark-radar::after {{ content:""; position:absolute; left:0; right:0; bottom:-8px; height:3px; background:linear-gradient(90deg,var(--yellow),var(--pink)); }}
-    .brand-dot {{ width:17px; height:17px; border-radius:50%; background:var(--pink); box-shadow:22px 0 0 var(--yellow); margin-right:22px; }}
-    .date {{ color:var(--muted); font-size:.82rem; letter-spacing:.08em; text-transform:uppercase; }}
-    .hero {{ padding:60px 0 22px; display:grid; grid-template-columns:minmax(0,1.7fr) minmax(320px,.8fr); gap:34px; align-items:end; }}
-    .hero-label {{ color:var(--pink); font-size:.78rem; font-weight:900; letter-spacing:.18em; text-transform:uppercase; }}
-    h1 {{ margin:.35rem 0 1rem; max-width:900px; font-size:clamp(3rem,7vw,7.2rem); line-height:.88; letter-spacing:-.075em; }}
+    .wordmark {{ display:flex; flex-direction:column; align-items:flex-start; line-height:.88; font-weight:950; }}
+    .wordmark-khandaan {{ color:var(--text); font-size:.86rem; letter-spacing:.22em; }}
+    .wordmark-radar {{ position:relative; margin-top:7px; color:var(--yellow); font-size:clamp(1.42rem,7vw,2.3rem); letter-spacing:-.04em; }}
+    .wordmark-radar em {{ color:var(--pink); font-style:normal; }} .wordmark-radar::after {{ content:""; position:absolute; left:0; right:0; bottom:-9px; height:3px; background:linear-gradient(90deg,var(--yellow) 0 72%,var(--pink) 72%); }}
+    .brand-dot {{ width:13px; height:13px; border-radius:50%; background:var(--pink); box-shadow:18px 0 0 var(--yellow); margin-right:18px; }}
+    .date {{ margin-top:23px; color:var(--muted); font-size:.68rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }}
+    .hero {{ padding:38px 0 3px; display:grid; gap:26px; }}
+    .hero-label {{ margin:0; color:var(--pink); font-size:.7rem; font-weight:900; letter-spacing:.18em; text-transform:uppercase; }}
+    h1 {{ margin:.5rem 0 .8rem; max-width:790px; font-family:Georgia,"Times New Roman",serif; font-size:clamp(2.55rem,12vw,5.8rem); font-weight:700; line-height:.92; letter-spacing:-.06em; }}
     h1 em {{ color:var(--yellow); font-style:normal; }}
-    .hero-copy {{ color:var(--muted); max-width:680px; font-size:1.08rem; }}
+    .hero-copy {{ margin:0; color:#d0cdc6; max-width:680px; font-family:Georgia,"Times New Roman",serif; font-size:1.03rem; }}
     .stats {{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }}
-    .stat {{ min-height:116px; padding:19px; border:1px solid var(--line); background:var(--panel); border-radius:18px; }}
-    .stat b {{ display:block; font-size:2.3rem; line-height:1; color:var(--yellow); }} .stat span {{ display:block; margin-top:10px; color:var(--muted); font-size:.75rem; font-weight:850; letter-spacing:.09em; text-transform:uppercase; }}
-    .quick-nav {{ position:sticky; top:0; z-index:20; margin-top:25px; padding:12px 0; background:rgba(12,12,13,.9); backdrop-filter:blur(16px); border-bottom:1px solid var(--line); }}
+    .stat {{ min-height:82px; padding:14px; border-top:3px solid var(--yellow); background:var(--panel); }}
+    .stat:nth-child(even) {{ border-top-color:var(--pink); }} .stat b {{ display:block; font-size:1.8rem; line-height:1; }} .stat span {{ display:block; margin-top:8px; color:var(--muted); font-size:.61rem; font-weight:850; letter-spacing:.09em; text-transform:uppercase; }}
+    .quick-nav {{ position:sticky; top:0; z-index:20; padding:10px 0; background:rgba(9,9,10,.94); backdrop-filter:blur(16px); border-bottom:1px solid var(--line); }}
     .quick-nav .shell {{ display:flex; gap:8px; overflow:auto; }}
-    .quick-nav a {{ white-space:nowrap; padding:9px 14px; color:var(--muted); border:1px solid var(--line); border-radius:999px; font-size:.76rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }}
+    .quick-nav a {{ white-space:nowrap; padding:7px 10px; color:var(--muted); border-left:2px solid var(--line); font-size:.65rem; font-weight:900; text-transform:uppercase; letter-spacing:.08em; }}
     .quick-nav a:hover {{ color:var(--ink); border-color:var(--yellow); background:var(--yellow); }}
-    main {{ padding-bottom:80px; }}
-    .dashboard-section {{ padding:64px 0 8px; scroll-margin-top:70px; }}
-    .section-heading {{ display:flex; justify-content:space-between; align-items:end; margin-bottom:22px; padding-bottom:15px; border-bottom:1px solid var(--line); }}
+    main {{ padding-bottom:60px; }}
+    .dashboard-section {{ padding:48px 0 4px; scroll-margin-top:58px; }}
+    .section-heading {{ display:flex; justify-content:space-between; align-items:end; margin-bottom:18px; padding-bottom:12px; border-bottom:3px solid var(--text); }}
     .section-heading p {{ margin:0 0 5px; color:var(--pink); font-size:.72rem; font-weight:900; letter-spacing:.15em; }}
-    h2 {{ margin:0; font-size:clamp(1.9rem,4vw,3.5rem); letter-spacing:-.055em; }}
-    .section-heading>span {{ color:var(--yellow); font-size:1.1rem; font-weight:900; }}
-    .card-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }}
-    #tonight .card-grid {{ grid-template-columns:repeat(6,minmax(0,1fr)); }} #tonight .story-card:nth-child(-n+2) {{ grid-column:span 3; }} #tonight .story-card:nth-child(n+3) {{ grid-column:span 2; }}
-    .story-card {{ display:flex; flex-direction:column; gap:18px; min-width:0; padding:22px; background:linear-gradient(145deg,var(--panel),#121214); border:1px solid var(--line); border-radius:22px; box-shadow:0 15px 50px rgba(0,0,0,.18); }}
+    h2 {{ margin:0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(1.75rem,8vw,3.1rem); line-height:1; letter-spacing:-.045em; }}
+    .section-heading>span {{ color:var(--yellow); font-size:1rem; font-weight:950; }}
+    .card-grid {{ display:grid; grid-template-columns:1fr; gap:14px; }}
+    .story-card {{ display:flex; flex-direction:column; gap:15px; min-width:0; padding:16px; overflow:hidden; background:linear-gradient(150deg,var(--panel),#101011); border:1px solid var(--line); border-radius:3px; box-shadow:0 15px 45px rgba(0,0,0,.2); }}
     .story-card:hover {{ border-color:#58585f; transform:translateY(-2px); transition:.18s ease; }}
-    .media-wrap {{ position:relative; margin:-22px -22px 0; }}
-    .story-media {{ position:relative; height:210px; overflow:hidden; border-radius:21px 21px 0 0; background:radial-gradient(circle at 22% 30%,rgba(255,61,141,.5),transparent 32%),radial-gradient(circle at 78% 70%,rgba(255,230,0,.36),transparent 32%),#242428; }}
+    .media-wrap {{ position:relative; margin:-16px -16px 0; }}
+    .story-media {{ position:relative; height:190px; overflow:hidden; background:radial-gradient(circle at 22% 30%,rgba(255,61,141,.5),transparent 32%),radial-gradient(circle at 78% 70%,rgba(255,230,0,.36),transparent 32%),#242428; }}
     .story-media img {{ width:100%; height:100%; display:block; object-fit:cover; }}
     .image-fallback {{ display:none; position:absolute; inset:0; place-items:center; color:rgba(255,255,255,.13); font-size:clamp(2rem,5vw,4.7rem); font-weight:950; letter-spacing:-.07em; transform:rotate(-7deg); }}
     .story-media.image-error .image-fallback {{ display:grid; }}
@@ -312,38 +319,31 @@ def render_dashboard(
     .trend,.age {{ padding:6px 9px; border-radius:999px; background:rgba(12,12,13,.82); box-shadow:0 5px 20px rgba(0,0,0,.28); backdrop-filter:blur(9px); font-size:.62rem; font-weight:950; letter-spacing:.07em; text-transform:uppercase; }}
     .trend-up {{ color:var(--green); }} .trend-down {{ color:var(--pink); }} .trend-new {{ color:var(--yellow); }} .age {{ color:#ddd9d0; }}
     .card-top {{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; min-height:28px; }}
-    .rank {{ display:grid; place-items:center; min-width:30px; height:30px; border-radius:50%; background:var(--yellow); color:var(--ink); font-weight:950; }}
+    .rank {{ display:grid; place-items:center; min-width:32px; height:32px; background:var(--yellow); color:var(--ink); font-family:Georgia,"Times New Roman",serif; font-size:1.05rem; font-weight:950; }}
     .badge-row {{ display:flex; flex-wrap:wrap; gap:6px; }}
-    .badge {{ padding:5px 8px; border-radius:6px; border:1px solid var(--line); color:var(--muted); font-size:.64rem; font-weight:950; letter-spacing:.07em; }}
+    .badge {{ padding:4px 7px; border:1px solid var(--line); color:var(--muted); font-size:.58rem; font-weight:950; letter-spacing:.07em; }}
     .badge-high-interest,.badge-breaking {{ color:var(--ink); background:var(--yellow); border-color:var(--yellow); }}
     .badge-fan-war,.badge-patreon {{ color:white; background:var(--pink); border-color:var(--pink); }}
     .badge-reel-idea,.badge-podcast {{ color:var(--green); border-color:rgba(113,230,160,.5); }}
-    .card-main {{ display:grid; grid-template-columns:82px 1fr; gap:17px; align-items:center; }}
-    .priority-ring {{ --size:78px; width:var(--size); height:var(--size); display:grid; place-content:center; text-align:center; border-radius:50%; background:radial-gradient(circle at center,var(--panel) 57%,transparent 59%),conic-gradient(var(--yellow) var(--score),#333337 0); }}
-    .priority-ring span {{ display:block; font-size:1.35rem; font-weight:950; line-height:1; }} .priority-ring small {{ margin-top:4px; color:var(--muted); font-size:.5rem; font-weight:900; letter-spacing:.08em; }}
     .eyebrow {{ margin:0 0 5px; color:var(--muted); font-size:.68rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }}
-    h3 {{ margin:0; font-size:clamp(1.05rem,2vw,1.42rem); line-height:1.16; letter-spacing:-.025em; }}
-    .recommendation {{ display:inline-block; margin:9px 0 0; color:var(--yellow); font-size:.7rem; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }}
-    .quick-scores {{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }}
-    .quick-scores>div {{ min-width:0; padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--panel-2); }} .quick-scores b {{ display:block; color:var(--yellow); font-size:1.2rem; line-height:1; }} .quick-scores span {{ display:block; margin-top:6px; color:var(--muted); font-size:.56rem; font-weight:900; letter-spacing:.06em; text-transform:uppercase; }}
-    .quick-scores .confidence-rumour b {{ color:var(--pink); }} .quick-scores .confidence-confirmed-signal b {{ color:var(--green); }}
-    .meters {{ display:grid; gap:7px; }} .meter {{ display:grid; grid-template-columns:82px 1fr 26px; gap:8px; align-items:center; color:var(--muted); font-size:.66rem; text-transform:uppercase; letter-spacing:.04em; }} .meter b {{ color:var(--text); text-align:right; }}
-    .track {{ height:5px; overflow:hidden; background:#303034; border-radius:10px; }} .track i {{ display:block; height:100%; border-radius:inherit; }} .track .pink {{ background:var(--pink); }} .track .yellow {{ background:var(--yellow); }}
-    blockquote {{ margin:0; padding:15px 16px; color:#e9e5dd; background:var(--panel-2); border-left:3px solid var(--pink); border-radius:0 12px 12px 0; font-size:.94rem; }} blockquote span {{ display:block; margin-bottom:5px; color:var(--pink); font-size:.61rem; font-weight:950; letter-spacing:.13em; }}
+    .eyebrow span {{ color:var(--pink); }} h3 {{ margin:0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(1.28rem,6vw,1.72rem); line-height:1.08; letter-spacing:-.025em; }}
+    .story-dek {{ margin:10px 0 0; color:#c4c0b8; font-size:.86rem; line-height:1.5; }}
+    .editorial-meta {{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }} .editorial-meta>div {{ padding:9px; background:var(--panel-2); }} .editorial-meta b {{ display:block; color:var(--yellow); font-size:1rem; line-height:1; }} .editorial-meta span {{ display:block; margin-top:5px; color:var(--muted); font-size:.51rem; font-weight:900; letter-spacing:.06em; text-transform:uppercase; }} .editorial-meta>strong {{ grid-column:1/-1; padding:7px 9px; background:var(--ink); color:var(--pink); font-size:.58rem; letter-spacing:.1em; text-transform:uppercase; }}
+    blockquote {{ margin:0; padding:13px 14px; color:#e9e5dd; background:var(--panel-2); border-left:3px solid var(--pink); font-family:Georgia,"Times New Roman",serif; font-size:.9rem; }} blockquote span {{ display:block; margin-bottom:5px; color:var(--pink); font-family:Inter,ui-sans-serif,system-ui,sans-serif; font-size:.56rem; font-weight:950; letter-spacing:.13em; }}
     .listener-signal {{ margin:0; color:var(--muted); font-size:.72rem; }}
     .card-actions {{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; padding-top:2px; }}
-    .source-link,.copy-actions button {{ display:inline-flex; align-items:center; justify-content:center; min-height:34px; padding:8px 11px; border-radius:9px; border:1px solid var(--line); background:transparent; color:var(--text); font:inherit; font-size:.65rem; font-weight:850; letter-spacing:.03em; cursor:pointer; }}
+    .source-link,.copy-actions button {{ display:inline-flex; align-items:center; justify-content:center; min-height:34px; padding:8px 10px; border:1px solid var(--line); background:transparent; color:var(--text); font:inherit; font-size:.61rem; font-weight:850; letter-spacing:.03em; cursor:pointer; }}
     .source-link {{ border-color:rgba(255,230,0,.55); color:var(--yellow); }} .source-link.disabled {{ color:var(--muted); border-color:var(--line); cursor:default; }}
     .copy-actions {{ display:flex; flex-wrap:wrap; gap:6px; }} .copy-actions button:hover,.copy-actions button.copied {{ color:var(--ink); border-color:var(--yellow); background:var(--yellow); }}
     .copy-payload {{ position:fixed; left:-10000px; top:-10000px; width:1px; height:1px; opacity:0; pointer-events:none; }}
     details {{ margin-top:auto; border-top:1px solid var(--line); padding-top:14px; }} summary {{ cursor:pointer; color:var(--muted); font-size:.72rem; font-weight:850; text-transform:uppercase; letter-spacing:.06em; }} summary:hover {{ color:var(--yellow); }}
     .details-body {{ padding-top:8px; color:var(--muted); font-size:.84rem; }} .details-body p {{ margin:12px 0 0; }} .details-body strong {{ display:block; color:var(--text); font-size:.67rem; text-transform:uppercase; letter-spacing:.06em; }}
-    .empty-state {{ grid-column:1/-1; padding:36px; color:var(--muted); border:1px dashed var(--line); border-radius:18px; text-align:center; }}
+    .empty-state {{ grid-column:1/-1; padding:36px; color:var(--muted); border:1px dashed var(--line); text-align:center; }}
     footer {{ padding:38px 0 55px; color:var(--muted); border-top:1px solid var(--line); font-size:.8rem; }} footer a {{ color:var(--yellow); font-weight:850; }}
     .footer-grid {{ display:grid; grid-template-columns:minmax(0,1.6fr) minmax(240px,.6fr); gap:30px; align-items:end; }} .footer-about strong {{ display:block; margin-bottom:7px; color:var(--pink); font-size:.66rem; letter-spacing:.12em; }} .footer-about p {{ margin:0; max-width:820px; color:#d4d0c8; font-size:.9rem; }} .footer-meta {{ display:flex; flex-direction:column; align-items:flex-end; gap:8px; text-align:right; }} .producer-link {{ font-size:.72rem; }}
-    @media (max-width:900px) {{ .hero {{ grid-template-columns:1fr; }} #tonight .card-grid,.card-grid {{ grid-template-columns:1fr; }} #tonight .story-card:nth-child(n) {{ grid-column:span 1; }} }}
-    @media (max-width:700px) {{ .footer-grid {{ grid-template-columns:1fr; }} .footer-meta {{ align-items:flex-start; text-align:left; }} }}
-    @media (max-width:560px) {{ .shell {{ width:min(100% - 24px,1420px); }} header {{ padding-top:22px; }} .brand-line {{ align-items:flex-start; flex-direction:column; }} .brand-actions {{ width:100%; }} .share-button,.download-button {{ flex:1; }} .share-status {{ text-align:left; }} .hero {{ padding-top:38px; }} h1 {{ font-size:clamp(2.45rem,13vw,3.15rem); overflow-wrap:anywhere; }} .hero-copy {{ font-size:.98rem; }} .stats {{ grid-template-columns:1fr 1fr; }} .stat {{ min-height:96px; padding:15px; }} .dashboard-section {{ padding-top:45px; }} .story-card {{ padding:17px; }} .media-wrap {{ margin:-17px -17px 0; }} .story-media {{ height:185px; }} .card-main {{ grid-template-columns:66px minmax(0,1fr); }} .priority-ring {{ --size:64px; }} h3 {{ overflow-wrap:anywhere; }} .quick-scores {{ grid-template-columns:1fr; }} .quick-scores>div {{ display:flex; align-items:center; justify-content:space-between; }} .quick-scores span {{ margin:0; }} .card-actions,.copy-actions {{ align-items:stretch; flex-direction:column; width:100%; }} .source-link,.copy-actions button {{ width:100%; }} }}
+    @media (max-width:559px) {{ h1,h3 {{ overflow-wrap:anywhere; }} .card-actions,.copy-actions {{ align-items:stretch; flex-direction:column; width:100%; }} .source-link,.copy-actions button {{ width:100%; }} .footer-grid {{ grid-template-columns:1fr; }} .footer-meta {{ align-items:flex-start; text-align:left; }} }}
+    @media (min-width:700px) {{ .shell {{ width:min(100% - 48px,1280px); }} header {{ padding-top:30px; }} .brand-line {{ align-items:center; flex-direction:row; justify-content:space-between; }} .brand-actions {{ width:auto; }} .share-button,.download-button {{ flex:none; }} .share-status {{ text-align:right; }} .hero {{ grid-template-columns:minmax(0,1.5fr) minmax(300px,.65fr); align-items:end; padding-top:52px; }} .card-grid {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} .story-media {{ height:220px; }} }}
+    @media (min-width:1040px) {{ .card-grid {{ grid-template-columns:repeat(3,minmax(0,1fr)); }} #tonight .card-grid {{ grid-template-columns:repeat(6,minmax(0,1fr)); }} #tonight .story-card:nth-child(-n+2) {{ grid-column:span 3; }} #tonight .story-card:nth-child(n+3) {{ grid-column:span 2; }} #tonight .story-card:nth-child(-n+2) .story-media {{ height:280px; }} .dashboard-section {{ padding-top:66px; }} }}
     @media print {{ .quick-nav,details {{ display:none; }} body {{ background:white; color:black; }} .story-card,.stat {{ break-inside:avoid; box-shadow:none; }} }}
   </style>
 </head>
@@ -351,10 +351,10 @@ def render_dashboard(
   <header><div class="shell">
     <div class="brand-line"><div class="brand-lockup"><span class="brand-dot"></span><div class="wordmark" aria-label="KHANDAAN BOLLYWOOD RADAR"><span class="wordmark-khandaan">KHANDAAN</span><span class="wordmark-radar">BOLLYWOOD <em>RADAR</em></span></div></div><div><div class="brand-actions"><button class="share-button" type="button" id="share-dashboard">Share dashboard</button><button class="download-button" type="button" id="download-dashboard">Download HTML</button></div><p class="share-status" id="share-status" aria-live="polite"></p></div></div>
     <div class="date">{generated}</div>
-    <div class="hero"><div><p class="hero-label">CONTENT PLANNING DASHBOARD</p><h1>What Bollywood fans are <em>actually talking about.</em></h1><p class="hero-copy">{escape(SEO_DESCRIPTION)}</p></div>
-    <div class="stats"><div class="stat"><b>{len(all_items)}</b><span>Total stories</span></div><div class="stat"><b>{high_interest}</b><span>High interest</span></div><div class="stat"><b>{len(reels)}</b><span>Reel ideas</span></div><div class="stat"><b>{fan_wars}</b><span>Fan wars</span></div></div></div>
+    <div class="hero"><div><p class="hero-label">THE WEEK IN BOLLYWOOD</p><h1>What Bollywood fans are talking about <em>this week</em></h1><p class="hero-copy">Stories, debates and industry shifts selected for the Khandaan conversation.</p></div>
+    <div class="stats"><div class="stat"><b>{len(all_items)}</b><span>Stories watched</span></div><div class="stat"><b>{high_interest}</b><span>Hot topics</span></div><div class="stat"><b>{len(reels)}</b><span>Reel picks</span></div><div class="stat"><b>{fan_wars}</b><span>Fan wars</span></div></div></div>
   </div></header>
-  <nav class="quick-nav"><div class="shell"><a href="#tonight">Tonight</a><a href="#reels">Reels</a><a href="#patreon">Patreon</a><a href="#listener-submissions">Listeners</a><a href="#all-stories">All stories</a><a href="#ignore">Ignore</a></div></nav>
+  <nav class="quick-nav" aria-label="This week's desks"><div class="shell"><a href="#tonight">Tonight</a><a href="#trending">Trending</a><a href="#fan-war">Fan War</a><a href="#listener-submissions">Listeners</a><a href="#reels">Reels</a><a href="#patreon">Patreon</a><a href="#industry">Industry</a></div></nav>
   <main class="shell">{sections}</main>
   <footer><div class="shell footer-grid"><div class="footer-about"><strong>ABOUT KHANDAAN BOLLYWOOD RADAR</strong><p>{escape(ABOUT_COPY)}</p></div><div class="footer-meta"><a class="producer-link" href="{PODCAST_URL}" target="_blank" rel="noopener noreferrer">Produced by Khandaan: A Bollywood Podcast</a><span>{footer_export}</span></div></div></footer>
   <script>
@@ -394,7 +394,7 @@ def render_dashboard(
       if (button) copyPlanning(button);
     }});
     function downloadableHtml() {{
-      return '<!doctype html>\n' + document.documentElement.outerHTML;
+      return '<!doctype html>\\n' + document.documentElement.outerHTML;
     }}
     function downloadDashboard() {{
       const blob = new Blob([downloadableHtml()], {{ type: 'text/html' }});

@@ -83,7 +83,19 @@ class Submission:
     khandaan_take: str = ""
     image_url: str = ""
     trend_direction: str = "new"
+    submitted_at: datetime | None = None
 
     @property
     def age_label(self) -> str:
-        return "submission age unknown"
+        if not self.submitted_at:
+            return "listener suggestion"
+        submitted = self.submitted_at
+        if submitted.tzinfo is None:
+            submitted = submitted.replace(tzinfo=timezone.utc)
+        hours = max(0.0, (datetime.now(timezone.utc) - submitted).total_seconds() / 3600)
+        if hours < 1:
+            return "submitted this hour"
+        if hours < 24:
+            return f"submitted {int(hours)}h ago"
+        days = max(1, int(hours / 24))
+        return f"submitted {days}d ago"
