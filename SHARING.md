@@ -6,6 +6,14 @@ Each generator run creates three HTML variants:
 - `share_dashboard.html` is a single self-contained file intended for file sharing.
 - `public/index.html` is the public-hosting-ready version.
 
+Listener submissions are included in all three HTML files and in `briefing.md`. These are
+static snapshots: new Google Form responses appear only after the generator is run again.
+Set `LISTENER_SUBMISSIONS_URL` to the public Google Sheet CSV export before generating, or
+leave it blank to use the local CSV configured in `sources.yaml`.
+
+If a response is missing a required field, the generator prints a warning and leaves that
+row out of every shared output. Review those warnings before publishing.
+
 ## Use the Share button
 
 The **Share dashboard** button behaves differently depending on configuration:
@@ -50,3 +58,7 @@ python -m khandaan_radar --public-url https://USERNAME.github.io/REPOSITORY/
 Any service that accepts a static `index.html` can use `public/index.html`. Set `DASHBOARD_PUBLIC_URL` to the final HTTPS address and regenerate once so the Share button and page metadata use the correct link.
 
 No upload happens automatically. This avoids storing Dropbox, Google, or GitHub credentials in the local MVP and prevents accidentally publishing listener information.
+
+Before sharing publicly, review the Listener Submissions section. Submitter names are shown
+only when `credit_permission` is affirmative, but story links, summaries, and audience notes
+are still published in the generated page.

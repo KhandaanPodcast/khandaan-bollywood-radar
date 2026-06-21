@@ -240,6 +240,7 @@ def render_dashboard(
         _section("tonight", "If We Recorded Tonight", "THE RUN OF SHOW", tonight, ranked=True, empty="No story earns the microphone tonight.", self_contained=self_contained, fetch_images=fetch_images),
         _section("reels", "Best Reel Opportunities", "VERTICAL VIDEO", reels, empty="No visual story is strong enough for a reel yet.", self_contained=self_contained, fetch_images=fetch_images),
         _section("patreon", "Best Patreon Discussions", "FOR THE MEMBERS", patreon, empty="No story currently rewards a deeper Patreon conversation.", self_contained=self_contained, fetch_images=fetch_images),
+        _section("listener-submissions", "Listener Submissions", "FROM THE AUDIENCE", submissions, empty="No listener submissions collected.", self_contained=self_contained, fetch_images=fetch_images),
         _section("all-stories", "All Ranked Stories", "THE FULL BOARD", active, empty="No active stories collected.", self_contained=self_contained, fetch_images=fetch_images),
         _section("ignore", "Stories To Ignore", "SAVE YOUR ENERGY", ignored, empty="Nothing is being ignored today.", self_contained=self_contained, fetch_images=fetch_images),
     ])
@@ -353,7 +354,7 @@ def render_dashboard(
     <div class="hero"><div><p class="hero-label">CONTENT PLANNING DASHBOARD</p><h1>What Bollywood fans are <em>actually talking about.</em></h1><p class="hero-copy">{escape(SEO_DESCRIPTION)}</p></div>
     <div class="stats"><div class="stat"><b>{len(all_items)}</b><span>Total stories</span></div><div class="stat"><b>{high_interest}</b><span>High interest</span></div><div class="stat"><b>{len(reels)}</b><span>Reel ideas</span></div><div class="stat"><b>{fan_wars}</b><span>Fan wars</span></div></div></div>
   </div></header>
-  <nav class="quick-nav"><div class="shell"><a href="#tonight">Tonight</a><a href="#reels">Reels</a><a href="#patreon">Patreon</a><a href="#all-stories">All stories</a><a href="#ignore">Ignore</a></div></nav>
+  <nav class="quick-nav"><div class="shell"><a href="#tonight">Tonight</a><a href="#reels">Reels</a><a href="#patreon">Patreon</a><a href="#listener-submissions">Listeners</a><a href="#all-stories">All stories</a><a href="#ignore">Ignore</a></div></nav>
   <main class="shell">{sections}</main>
   <footer><div class="shell footer-grid"><div class="footer-about"><strong>ABOUT KHANDAAN BOLLYWOOD RADAR</strong><p>{escape(ABOUT_COPY)}</p></div><div class="footer-meta"><a class="producer-link" href="{PODCAST_URL}" target="_blank" rel="noopener noreferrer">Produced by Khandaan: A Bollywood Podcast</a><span>{footer_export}</span></div></div></footer>
   <script>

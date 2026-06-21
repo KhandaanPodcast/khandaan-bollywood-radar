@@ -1,14 +1,16 @@
+import os
 import tempfile
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 from khandaan_radar.dedupe import canonical_url, deduplicate_stories
 from khandaan_radar.briefing import render_briefing
 from khandaan_radar.dashboard import render_dashboard
 from khandaan_radar.models import Story, Submission
 from khandaan_radar.scoring import rank_stories
-from khandaan_radar.submissions import group_submissions, load_submissions
+from khandaan_radar.submissions import group_submissions, load_submissions, resolve_submission_source
 from khandaan_radar.summarizer import fallback_editorial
 
 
@@ -44,6 +46,96 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(result[0].recommendation, "reel")
         self.assertGreater(result[0].priority_score, 0)
         self.assertEqual(result[0].topic_category, "trailer / music / craft")
+
+    def test_google_form_sheet_headers_and_missing_field_warnings(self):
+        csv_text = (
+            "Timestamp,Story Link: Example: https://www.reddit.com/...,Briefly explain what happened.,"
+            'Source Platform,"Why is this interesting, controversial or worth discussing?",'
+            "Your Name or Handle,Can We Credit You?,Patreon Member\n"
+            "2026-06-21 10:00,https://example.com/story,Audience debate,Reddit,"
+            'Strong discussion potential,Asha,"Yes, credit me",Yes\n'
+            "2026-06-21 10:05,https://example.com/incomplete,,YouTube,Strong visuals,Dev,No,No\n"
+        )
+        response = Mock(text=csv_text)
+        response.raise_for_status.return_value = None
+        warnings = []
+        sheet_url = "https://docs.google.com/spreadsheets/d/sheet-id/edit?gid=42"
+        with patch("requests.get", return_value=response) as get:
+            result = load_submissions(sheet_url, Path.cwd(), warnings=warnings)
+
+        get.assert_called_once_with(
+            "https://docs.google.com/spreadsheets/d/sheet-id/export?format=csv&gid=42",
+            timeout=20,
+        )
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].summary, "Audience debate")
+        self.assertTrue(result[0].credit_permission)
+        self.assertTrue(result[0].patreon_member)
+        self.assertEqual(
+            warnings,
+            ["Listener submission row 3 skipped; missing required fields: summary"],
+        )
+
+    def test_direct_google_sheet_csv_export_url_is_preserved(self):
+        response = Mock(
+            text=(
+                "story_link,summary,source_platform,why_it_matters,submitter_name,"
+                "credit_permission,patreon_member\n"
+            )
+        )
+        response.raise_for_status.return_value = None
+        export_url = "https://docs.google.com/spreadsheets/d/sheet-id/export?format=csv"
+        with patch("requests.get", return_value=response) as get:
+            self.assertEqual(load_submissions(export_url, Path.cwd()), [])
+        get.assert_called_once_with(export_url, timeout=20)
+
+    def test_missing_required_columns_warn_and_skip_source(self):
+        with tempfile.TemporaryDirectory() as directory:
+            tmp_path = Path(directory)
+            csv_path = tmp_path / "listeners.csv"
+            csv_path.write_text("story_link,summary\nhttps://example.com/story,Story\n", encoding="utf-8")
+            warnings = []
+            result = load_submissions(str(csv_path), tmp_path, warnings=warnings)
+
+        self.assertEqual(result, [])
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("missing required columns", warnings[0])
+        self.assertIn("source_platform", warnings[0])
+
+    def test_listener_submission_url_overrides_configured_csv(self):
+        with patch.dict(os.environ, {"LISTENER_SUBMISSIONS_URL": "https://example.com/listeners.csv"}):
+            self.assertEqual(
+                resolve_submission_source("listener_submissions.csv"),
+                "https://example.com/listeners.csv",
+            )
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(resolve_submission_source("listener_submissions.csv"), "listener_submissions.csv")
+
+    def test_listener_submissions_render_in_all_outputs(self):
+        submission = Submission(
+            "https://example.com/listener-story", "Listener story marker", "Google Form",
+            "The audience wants this discussed", "Asha", True, True,
+            priority_score=70, discussion_score=65, confidence_score=60,
+            output_recommendation="Patreon Discussion", khandaan_take="The audience spotted this.",
+            editorial_angle="Follow the audience question.", suggested_hook="Why this story?",
+            suggested_patron_poll="Should we discuss it?", submitters=["Asha"],
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            tmp_path = Path(directory)
+            briefing = tmp_path / "briefing.md"
+            dashboards = [
+                tmp_path / "dashboard.html",
+                tmp_path / "share_dashboard.html",
+                tmp_path / "public" / "index.html",
+            ]
+            render_briefing(briefing, [], [], [], [submission], fallback_editorial())
+            for output in dashboards:
+                render_dashboard(output, [], [], [], [submission], self_contained=True, fetch_images=False)
+
+            for output in [briefing, *dashboards]:
+                text = output.read_text(encoding="utf-8")
+                self.assertIn("Listener Submissions", text)
+                self.assertIn("Listener story marker", text)
 
     def test_rule_based_story_scoring(self):
         story = Story(

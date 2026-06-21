@@ -35,7 +35,8 @@ Add `OPENAI_API_KEY` to `.env`. To enable Reddit, create a Reddit **script** app
 
 Edit `sources.yaml`. Google News keywords and Reddit subreddits are ordinary YAML lists. Relative file paths are resolved from the directory containing `sources.yaml`.
 
-For listener submissions, set `listener_submissions.source` to one of:
+The default listener source is the checked-in `listener_submissions.csv`. You can change
+`listener_submissions.source` in `sources.yaml`:
 
 ```yaml
 listener_submissions:
@@ -47,11 +48,32 @@ listener_submissions:
   source: https://docs.google.com/spreadsheets/d/SHEET_ID/edit?gid=0
 ```
 
-The Google Sheet must be shared so the export URL is readable. A direct HTTPS CSV export also works. Required columns are:
+For deployment or local overrides, set `LISTENER_SUBMISSIONS_URL` in `.env` instead:
+
+```dotenv
+LISTENER_SUBMISSIONS_URL=https://docs.google.com/spreadsheets/d/SHEET_ID/export?format=csv
+```
+
+When `LISTENER_SUBMISSIONS_URL` is non-empty, it takes precedence over
+`listener_submissions.source`. Leave it blank to continue using the configured local CSV.
+The Google Sheet must be shared so anyone with the link can read it. A normal Google Sheet
+URL is converted to its CSV export automatically, and a direct HTTPS CSV export works too.
+
+Required fields are:
 
 `story_link, summary, source_platform, why_it_matters, submitter_name, credit_permission, patreon_member`
 
+Local CSV files can use those names directly. Google Form response sheets can also use the
+question headings from the provided form, including `Story Link: Example: ...`, `Briefly
+explain what happened.`, `Source Platform`, `Why is this interesting, controversial or worth
+discussing?`, `Your Name or Handle`, `Can We Credit You?`, and `Patreon Member`.
+
 Use `yes/no`, `true/false`, or `1/0` for the two boolean fields. Names appear in the briefing only when `credit_permission` is affirmative.
+
+Every non-empty response is validated. A row missing any required field is skipped and a
+row-numbered warning is printed; a sheet or CSV missing required columns is skipped with a
+warning listing those columns. Other valid submissions still appear in `dashboard.html`,
+`briefing.md`, `share_dashboard.html`, and `public/index.html`.
 
 Listener CSVs and Sheets may optionally add an `image_url` column containing a direct HTTPS poster or story-image URL. Google News and Reddit images are detected automatically when their feeds expose one.
 
@@ -87,7 +109,7 @@ The primary output is `dashboard.html`; `briefing.md` is generated alongside it.
 ## Tests
 
 ```bash
-python -m unittest discover -s tests
+python3 -m unittest discover -s tests
 ```
 
 The rule-based editorial planner works with `--offline --no-ai`, including scoring and format recommendations. The MVP intentionally avoids a database, scheduler, X API dependency, and private Google credentials. It is designed to run by hand or from a local cron job and to keep its inputs inspectable.
