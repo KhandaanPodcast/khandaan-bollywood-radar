@@ -13,7 +13,7 @@ from .dashboard import render_dashboard
 from .dedupe import deduplicate_stories
 from .fetchers import fetch_google_news, fetch_reddit, read_x_inputs
 from .scoring import apply_ai_enrichment, rank_stories, rank_submissions
-from .submissions import group_submissions, load_submissions
+from .submissions import group_submissions, load_submissions, resolve_submission_source
 from .summarizer import fallback_editorial, generate_editorial
 
 
@@ -54,8 +54,8 @@ def main() -> None:
                 warnings.append(f"Reddit skipped: {exc}")
         x_path = _resolve(base_dir, config["x_inputs"]["file"])
         x_items = read_x_inputs(x_path)
-        submission_source = config["listener_submissions"].get("source", "")
-        submissions = group_submissions(load_submissions(submission_source, base_dir)) if submission_source else []
+        submission_source = resolve_submission_source(config["listener_submissions"].get("source", ""))
+        submissions = group_submissions(load_submissions(submission_source, base_dir, warnings=warnings)) if submission_source else []
 
         news = rank_stories(deduplicate_stories(news))[: int(config["briefing"]["top_stories"])]
         reddit = rank_stories(deduplicate_stories(reddit))[: int(config["briefing"]["reddit_items"])]

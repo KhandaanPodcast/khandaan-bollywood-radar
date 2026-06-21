@@ -2,7 +2,7 @@
 
 _What Bollywood fans are actually talking about._
 
-_Editorial planning brief · 20 June 2026, 15:57 BST_
+_Editorial planning brief · 21 June 2026, 11:49 BST_
 
 ## 1. Executive Summary
 
