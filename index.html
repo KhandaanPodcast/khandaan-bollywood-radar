@@ -1,0 +1,2222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="The stories, debates, fan wars and industry shifts shaping Bollywood this week. Powered by news, Reddit discussions, X conversations and audience submissions.">
+  <meta name="keywords" content="Bollywood news, Bollywood Reddit, Bollywood gossip, Bollywood box office, Hindi cinema, Bollywood podcast, Khandaan Podcast, Bollywood discussions, Bollywood trends">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Khandaan Bollywood Radar">
+  <meta property="og:description" content="The stories, debates, fan wars and industry shifts shaping Bollywood this week. Powered by news, Reddit discussions, X conversations and audience submissions.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Khandaan Bollywood Radar">
+  <meta name="twitter:description" content="The stories, debates, fan wars and industry shifts shaping Bollywood this week. Powered by news, Reddit discussions, X conversations and audience submissions.">
+  
+  <title>Khandaan Bollywood Radar</title>
+  <style>
+    :root { --ink:#09090a; --panel:#151517; --panel-2:#1d1d20; --line:#333338; --text:#f8f6ef; --muted:#aaa7a0; --yellow:#ffe000; --pink:#ff3f8e; --green:#78e2a7; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--ink); color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }
+    body::before { content:""; position:fixed; inset:0; pointer-events:none; opacity:.2; background:radial-gradient(circle at 10% 0,rgba(255,63,142,.13),transparent 30%),radial-gradient(circle at 90% 8%,rgba(255,224,0,.1),transparent 28%); }
+    a { color:inherit; text-decoration:none; } a:hover { color:var(--yellow); }
+    .shell { width:min(100% - 24px,1280px); margin:auto; position:relative; }
+    header { padding:20px 0 25px; border-bottom:1px solid var(--line); }
+    .brand-line { display:flex; align-items:flex-start; flex-direction:column; gap:22px; }
+    .brand-actions { display:flex; width:100%; align-items:center; gap:8px; }
+    .share-button,.download-button { flex:1; min-height:40px; padding:9px 12px; border:1px solid var(--line); border-radius:4px; background:var(--panel); color:var(--text); font:inherit; font-size:.66rem; font-weight:900; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; }
+    .share-button { color:var(--ink); border-color:var(--yellow); background:var(--yellow); } .share-button:hover,.download-button:hover { border-color:var(--pink); background:var(--pink); color:white; }
+    .share-status { min-height:1.4em; margin:8px 0 0; color:var(--muted); font-size:.7rem; }
+    .brand-lockup { display:flex; align-items:center; gap:13px; }
+    .wordmark { display:flex; flex-direction:column; align-items:flex-start; line-height:.88; font-weight:950; }
+    .wordmark-khandaan { color:var(--text); font-size:.86rem; letter-spacing:.22em; }
+    .wordmark-radar { position:relative; margin-top:7px; color:var(--yellow); font-size:clamp(1.42rem,7vw,2.3rem); letter-spacing:-.04em; }
+    .wordmark-radar em { color:var(--pink); font-style:normal; } .wordmark-radar::after { content:""; position:absolute; left:0; right:0; bottom:-9px; height:3px; background:linear-gradient(90deg,var(--yellow) 0 72%,var(--pink) 72%); }
+    .brand-dot { width:13px; height:13px; border-radius:50%; background:var(--pink); box-shadow:18px 0 0 var(--yellow); margin-right:18px; }
+    .date { margin-top:23px; color:var(--muted); font-size:.68rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .hero { padding:38px 0 3px; display:grid; gap:26px; }
+    .hero-label { margin:0; color:var(--pink); font-size:.7rem; font-weight:900; letter-spacing:.18em; text-transform:uppercase; }
+    h1 { margin:.5rem 0 .8rem; max-width:790px; font-family:Georgia,"Times New Roman",serif; font-size:clamp(2.55rem,12vw,5.8rem); font-weight:700; line-height:.92; letter-spacing:-.06em; }
+    h1 em { color:var(--yellow); font-style:normal; }
+    .hero-copy { margin:0; color:#d0cdc6; max-width:680px; font-family:Georgia,"Times New Roman",serif; font-size:1.03rem; }
+    .stats { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    .stat { min-height:82px; padding:14px; border-top:3px solid var(--yellow); background:var(--panel); }
+    .stat:nth-child(even) { border-top-color:var(--pink); } .stat b { display:block; font-size:1.8rem; line-height:1; } .stat span { display:block; margin-top:8px; color:var(--muted); font-size:.61rem; font-weight:850; letter-spacing:.09em; text-transform:uppercase; }
+    .quick-nav { position:sticky; top:0; z-index:20; padding:10px 0; background:rgba(9,9,10,.94); backdrop-filter:blur(16px); border-bottom:1px solid var(--line); }
+    .quick-nav .shell { display:flex; gap:8px; overflow:auto; }
+    .quick-nav a { white-space:nowrap; padding:7px 10px; color:var(--muted); border-left:2px solid var(--line); font-size:.65rem; font-weight:900; text-transform:uppercase; letter-spacing:.08em; }
+    .quick-nav a:hover { color:var(--ink); border-color:var(--yellow); background:var(--yellow); }
+    main { padding-bottom:60px; }
+    .dashboard-section { padding:48px 0 4px; scroll-margin-top:58px; }
+    .section-heading { display:flex; justify-content:space-between; align-items:end; margin-bottom:18px; padding-bottom:12px; border-bottom:3px solid var(--text); }
+    .section-heading p { margin:0 0 5px; color:var(--pink); font-size:.72rem; font-weight:900; letter-spacing:.15em; }
+    h2 { margin:0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(1.75rem,8vw,3.1rem); line-height:1; letter-spacing:-.045em; }
+    .section-heading>span { color:var(--yellow); font-size:1rem; font-weight:950; }
+    .card-grid { display:grid; grid-template-columns:1fr; gap:14px; }
+    .story-card { display:flex; flex-direction:column; gap:15px; min-width:0; padding:16px; overflow:hidden; background:linear-gradient(150deg,var(--panel),#101011); border:1px solid var(--line); border-radius:3px; box-shadow:0 15px 45px rgba(0,0,0,.2); }
+    .story-card:hover { border-color:#58585f; transform:translateY(-2px); transition:.18s ease; }
+    .media-wrap { position:relative; margin:-16px -16px 0; }
+    .story-media { position:relative; height:190px; overflow:hidden; background:radial-gradient(circle at 22% 30%,rgba(255,61,141,.5),transparent 32%),radial-gradient(circle at 78% 70%,rgba(255,230,0,.36),transparent 32%),#242428; }
+    .story-media img { width:100%; height:100%; display:block; object-fit:cover; }
+    .image-fallback { display:none; position:absolute; inset:0; place-items:center; color:rgba(255,255,255,.13); font-size:clamp(2rem,5vw,4.7rem); font-weight:950; letter-spacing:-.07em; transform:rotate(-7deg); }
+    .story-media.image-error .image-fallback { display:grid; }
+    .story-status { position:absolute; inset:14px 14px auto; display:flex; justify-content:space-between; align-items:center; gap:10px; pointer-events:none; }
+    .trend,.age { padding:6px 9px; border-radius:999px; background:rgba(12,12,13,.82); box-shadow:0 5px 20px rgba(0,0,0,.28); backdrop-filter:blur(9px); font-size:.62rem; font-weight:950; letter-spacing:.07em; text-transform:uppercase; }
+    .trend-up { color:var(--green); } .trend-down { color:var(--pink); } .trend-new { color:var(--yellow); } .age { color:#ddd9d0; }
+    .card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; min-height:28px; }
+    .rank { display:grid; place-items:center; min-width:32px; height:32px; background:var(--yellow); color:var(--ink); font-family:Georgia,"Times New Roman",serif; font-size:1.05rem; font-weight:950; }
+    .badge-row { display:flex; flex-wrap:wrap; gap:6px; }
+    .badge { padding:4px 7px; border:1px solid var(--line); color:var(--muted); font-size:.58rem; font-weight:950; letter-spacing:.07em; }
+    .badge-high-interest,.badge-breaking { color:var(--ink); background:var(--yellow); border-color:var(--yellow); }
+    .badge-fan-war,.badge-patreon { color:white; background:var(--pink); border-color:var(--pink); }
+    .badge-reel-idea,.badge-podcast { color:var(--green); border-color:rgba(113,230,160,.5); }
+    .eyebrow { margin:0 0 5px; color:var(--muted); font-size:.68rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+    .eyebrow span { color:var(--pink); } h3 { margin:0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(1.28rem,6vw,1.72rem); line-height:1.08; letter-spacing:-.025em; }
+    .story-dek { margin:10px 0 0; color:#c4c0b8; font-size:.86rem; line-height:1.5; }
+    .editorial-meta { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); } .editorial-meta>div { padding:9px; background:var(--panel-2); } .editorial-meta b { display:block; color:var(--yellow); font-size:1rem; line-height:1; } .editorial-meta span { display:block; margin-top:5px; color:var(--muted); font-size:.51rem; font-weight:900; letter-spacing:.06em; text-transform:uppercase; } .editorial-meta>strong { grid-column:1/-1; padding:7px 9px; background:var(--ink); color:var(--pink); font-size:.58rem; letter-spacing:.1em; text-transform:uppercase; }
+    blockquote { margin:0; padding:13px 14px; color:#e9e5dd; background:var(--panel-2); border-left:3px solid var(--pink); font-family:Georgia,"Times New Roman",serif; font-size:.9rem; } blockquote span { display:block; margin-bottom:5px; color:var(--pink); font-family:Inter,ui-sans-serif,system-ui,sans-serif; font-size:.56rem; font-weight:950; letter-spacing:.13em; }
+    .listener-signal { margin:0; color:var(--muted); font-size:.72rem; }
+    .card-actions { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; padding-top:2px; }
+    .source-link,.copy-actions button { display:inline-flex; align-items:center; justify-content:center; min-height:34px; padding:8px 10px; border:1px solid var(--line); background:transparent; color:var(--text); font:inherit; font-size:.61rem; font-weight:850; letter-spacing:.03em; cursor:pointer; }
+    .source-link { border-color:rgba(255,230,0,.55); color:var(--yellow); } .source-link.disabled { color:var(--muted); border-color:var(--line); cursor:default; }
+    .copy-actions { display:flex; flex-wrap:wrap; gap:6px; } .copy-actions button:hover,.copy-actions button.copied { color:var(--ink); border-color:var(--yellow); background:var(--yellow); }
+    .copy-payload { position:fixed; left:-10000px; top:-10000px; width:1px; height:1px; opacity:0; pointer-events:none; }
+    details { margin-top:auto; border-top:1px solid var(--line); padding-top:14px; } summary { cursor:pointer; color:var(--muted); font-size:.72rem; font-weight:850; text-transform:uppercase; letter-spacing:.06em; } summary:hover { color:var(--yellow); }
+    .details-body { padding-top:8px; color:var(--muted); font-size:.84rem; } .details-body p { margin:12px 0 0; } .details-body strong { display:block; color:var(--text); font-size:.67rem; text-transform:uppercase; letter-spacing:.06em; }
+    .empty-state { grid-column:1/-1; padding:36px; color:var(--muted); border:1px dashed var(--line); text-align:center; }
+    footer { padding:38px 0 55px; color:var(--muted); border-top:1px solid var(--line); font-size:.8rem; } footer a { color:var(--yellow); font-weight:850; }
+    .footer-grid { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(240px,.6fr); gap:30px; align-items:end; } .footer-about strong { display:block; margin-bottom:7px; color:var(--pink); font-size:.66rem; letter-spacing:.12em; } .footer-about p { margin:0; max-width:820px; color:#d4d0c8; font-size:.9rem; } .footer-meta { display:flex; flex-direction:column; align-items:flex-end; gap:8px; text-align:right; } .producer-link { font-size:.72rem; }
+    @media (max-width:559px) { h1,h3 { overflow-wrap:anywhere; } .card-actions,.copy-actions { align-items:stretch; flex-direction:column; width:100%; } .source-link,.copy-actions button { width:100%; } .footer-grid { grid-template-columns:1fr; } .footer-meta { align-items:flex-start; text-align:left; } }
+    @media (min-width:700px) { .shell { width:min(100% - 48px,1280px); } header { padding-top:30px; } .brand-line { align-items:center; flex-direction:row; justify-content:space-between; } .brand-actions { width:auto; } .share-button,.download-button { flex:none; } .share-status { text-align:right; } .hero { grid-template-columns:minmax(0,1.5fr) minmax(300px,.65fr); align-items:end; padding-top:52px; } .card-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .story-media { height:220px; } }
+    @media (min-width:1040px) { .card-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } #tonight .card-grid { grid-template-columns:repeat(6,minmax(0,1fr)); } #tonight .story-card:nth-child(-n+2) { grid-column:span 3; } #tonight .story-card:nth-child(n+3) { grid-column:span 2; } #tonight .story-card:nth-child(-n+2) .story-media { height:280px; } .dashboard-section { padding-top:66px; } }
+    @media print { .quick-nav,details { display:none; } body { background:white; color:black; } .story-card,.stat { break-inside:avoid; box-shadow:none; } }
+  </style>
+</head>
+<body data-public-url="">
+  <header><div class="shell">
+    <div class="brand-line"><div class="brand-lockup"><span class="brand-dot"></span><div class="wordmark" aria-label="KHANDAAN BOLLYWOOD RADAR"><span class="wordmark-khandaan">KHANDAAN</span><span class="wordmark-radar">BOLLYWOOD <em>RADAR</em></span></div></div><div><div class="brand-actions"><button class="share-button" type="button" id="share-dashboard">Share dashboard</button><button class="download-button" type="button" id="download-dashboard">Download HTML</button></div><p class="share-status" id="share-status" aria-live="polite"></p></div></div>
+    <div class="date">21 June 2026 &middot; 15:18 BST</div>
+    <div class="hero"><div><p class="hero-label">THE WEEK IN BOLLYWOOD</p><h1>What Bollywood fans are talking about <em>this week</em></h1><p class="hero-copy">Stories, debates and industry shifts selected for the Khandaan conversation.</p></div>
+    <div class="stats"><div class="stat"><b>11</b><span>Stories watched</span></div><div class="stat"><b>1</b><span>Hot topics</span></div><div class="stat"><b>1</b><span>Reel picks</span></div><div class="stat"><b>1</b><span>Fan wars</span></div></div></div>
+  </div></header>
+  <nav class="quick-nav" aria-label="This week's desks"><div class="shell"><a href="#tonight">Tonight</a><a href="#trending">Trending</a><a href="#fan-war">Fan War</a><a href="#listener-submissions">Listeners</a><a href="#reels">Reels</a><a href="#patreon">Patreon</a><a href="#industry">Industry</a></div></nav>
+  <main class="shell">
+<section id="tonight" class="dashboard-section">
+  <div class="section-heading"><div><p>THE EDITOR&#x27;S FIVE</p><h2>If We Recorded Tonight</h2></div><span>05</span></div>
+  <div class="card-grid">
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-up">&uarr; UP</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">1</span><div class="badge-row"><span class="badge badge-high-interest">HIGH INTEREST</span><span class="badge badge-fan-war">FAN WAR</span><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> fan culture / controversy</p>
+    <h3><a href="https://x.com/example/ranbir" target="_blank" rel="noopener noreferrer">Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star</a></h3>
+<p class="story-dek">Fan wars always generate engagement</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>67</b><span>Discussion</span></div>
+    <div><b>78</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/ranbir" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="tonight-1-podcast">Copy podcast notes</button><button type="button" data-copy-target="tonight-1-reel">Copy reel idea</button><button type="button" data-copy-target="tonight-1-patreon">Copy Patreon post</button></div></div>
+  <textarea id="tonight-1-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+Discussion: 6.7/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+Editorial angle: Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.
+
+Opening hook: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?
+
+Source: https://x.com/example/ranbir</textarea><textarea id="tonight-1-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?
+
+Story: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+Talking point: The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+On-screen question: Is this a meaningful debate, harmless fandom theatre, or a cue to log off?
+
+Source: https://x.com/example/ranbir</textarea><textarea id="tonight-1-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+What we want to discuss: Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.
+
+Patron question: Is this a meaningful debate, harmless fandom theatre, or a cue to log off?
+
+Source: https://x.com/example/ranbir</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.</p>
+      <p><strong>Suggested hook</strong>Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?</p>
+      <p><strong>Patron poll</strong>Is this a meaningful debate, harmless fandom theatre, or a cue to log off?</p>
+      <p><strong>Source badges</strong>Fan War</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">under 1h old</span></div></div>
+  <div class="card-top"><span class="rank">2</span><div class="badge-row"><span class="badge badge-breaking">BREAKING</span><span class="badge badge-podcast">PODCAST</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">X (manual) <span>&middot;</span> industry / business</p>
+    <h3>Himesh Mankad reporting strong advance bookings for Ramayana.</h3>
+<p class="story-dek">Himesh Mankad reporting strong advance bookings for Ramayana.</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>57</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>72</b><span>CONFIRMED SIGNAL</span></div>
+    <strong>Main Episode</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.</blockquote>
+
+  <div class="card-actions"><span class="source-link disabled">No source link</span><div class="copy-actions"><button type="button" data-copy-target="tonight-2-podcast">Copy podcast notes</button><button type="button" data-copy-target="tonight-2-reel">Copy reel idea</button><button type="button" data-copy-target="tonight-2-patreon">Copy Patreon post</button></div></div>
+  <textarea id="tonight-2-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Himesh Mankad reporting strong advance bookings for Ramayana.
+
+Discussion: 5.7/10
+Confidence: CONFIRMED SIGNAL (7.2/10)
+
+Khandaan Take: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.
+
+Source: No source link</textarea><textarea id="tonight-2-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.
+
+Story: Himesh Mankad reporting strong advance bookings for Ramayana.
+
+Talking point: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea><textarea id="tonight-2-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Himesh Mankad reporting strong advance bookings for Ramayana.
+
+The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Film Release, Box Office, Industry Trend</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">3</span><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Trade analysts predicting an unusually strong Diwali box office</a></h3>
+<p class="story-dek">Forward-looking industry discussion</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>56</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="tonight-3-podcast">Copy podcast notes</button><button type="button" data-copy-target="tonight-3-reel">Copy reel idea</button><button type="button" data-copy-target="tonight-3-patreon">Copy Patreon post</button></div></div>
+  <textarea id="tonight-3-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Trade analysts predicting an unusually strong Diwali box office
+
+Discussion: 5.5/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="tonight-3-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Story: Trade analysts predicting an unusually strong Diwali box office
+
+Talking point: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="tonight-3-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Trade analysts predicting an unusually strong Diwali box office
+
+The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend, Box Office</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">4</span><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio</a></h3>
+<p class="story-dek">Interesting industry trend story</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>53</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="tonight-4-podcast">Copy podcast notes</button><button type="button" data-copy-target="tonight-4-reel">Copy reel idea</button><button type="button" data-copy-target="tonight-4-patreon">Copy Patreon post</button></div></div>
+  <textarea id="tonight-4-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Discussion: 5.3/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/maddock</textarea><textarea id="tonight-4-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Story: Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Talking point: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea><textarea id="tonight-4-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">under 1h old</span></div></div>
+  <div class="card-top"><span class="rank">5</span><div class="badge-row"><span class="badge badge-watch">WATCH</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">X (manual) <span>&middot;</span> industry / business</p>
+    <h3>Several users discussing the success of Saiyaara and whether it changes studio strategy.</h3>
+<p class="story-dek">Several users discussing the success of Saiyaara and whether it changes studio strategy.</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>52</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>56</b><span>VERIFY</span></div>
+    <strong>Newsletter</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.</blockquote>
+
+  <div class="card-actions"><span class="source-link disabled">No source link</span><div class="copy-actions"><button type="button" data-copy-target="tonight-5-podcast">Copy podcast notes</button><button type="button" data-copy-target="tonight-5-reel">Copy reel idea</button><button type="button" data-copy-target="tonight-5-patreon">Copy Patreon post</button></div></div>
+  <textarea id="tonight-5-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Several users discussing the success of Saiyaara and whether it changes studio strategy.
+
+Discussion: 5.2/10
+Confidence: VERIFY (5.6/10)
+
+Khandaan Take: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Several users discussing the success of Saiyaara and whether it changes studio strategy, but the more interesting story may be the business decision underneath it.
+
+Source: No source link</textarea><textarea id="tonight-5-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Several users discussing the success of Saiyaara and whether it changes studio strategy, but the more interesting story may be the business decision underneath it.
+
+Story: Several users discussing the success of Saiyaara and whether it changes studio strategy.
+
+Talking point: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea><textarea id="tonight-5-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Several users discussing the success of Saiyaara and whether it changes studio strategy.
+
+One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Several users discussing the success of Saiyaara and whether it changes studio strategy, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend</p>
+    </div>
+  </details>
+</article></div>
+</section>
+<section id="trending" class="dashboard-section">
+  <div class="section-heading"><div><p>WHAT IS MOVING</p><h2>Trending Stories</h2></div><span>08</span></div>
+  <div class="card-grid">
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-up">&uarr; UP</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">1</span><div class="badge-row"><span class="badge badge-high-interest">HIGH INTEREST</span><span class="badge badge-fan-war">FAN WAR</span><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> fan culture / controversy</p>
+    <h3><a href="https://x.com/example/ranbir" target="_blank" rel="noopener noreferrer">Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star</a></h3>
+<p class="story-dek">Fan wars always generate engagement</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>67</b><span>Discussion</span></div>
+    <div><b>78</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/ranbir" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="trending-1-podcast">Copy podcast notes</button><button type="button" data-copy-target="trending-1-reel">Copy reel idea</button><button type="button" data-copy-target="trending-1-patreon">Copy Patreon post</button></div></div>
+  <textarea id="trending-1-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+Discussion: 6.7/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+Editorial angle: Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.
+
+Opening hook: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?
+
+Source: https://x.com/example/ranbir</textarea><textarea id="trending-1-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?
+
+Story: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+Talking point: The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+On-screen question: Is this a meaningful debate, harmless fandom theatre, or a cue to log off?
+
+Source: https://x.com/example/ranbir</textarea><textarea id="trending-1-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+What we want to discuss: Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.
+
+Patron question: Is this a meaningful debate, harmless fandom theatre, or a cue to log off?
+
+Source: https://x.com/example/ranbir</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.</p>
+      <p><strong>Suggested hook</strong>Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?</p>
+      <p><strong>Patron poll</strong>Is this a meaningful debate, harmless fandom theatre, or a cue to log off?</p>
+      <p><strong>Source badges</strong>Fan War</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">under 1h old</span></div></div>
+  <div class="card-top"><span class="rank">2</span><div class="badge-row"><span class="badge badge-breaking">BREAKING</span><span class="badge badge-podcast">PODCAST</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">X (manual) <span>&middot;</span> industry / business</p>
+    <h3>Himesh Mankad reporting strong advance bookings for Ramayana.</h3>
+<p class="story-dek">Himesh Mankad reporting strong advance bookings for Ramayana.</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>57</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>72</b><span>CONFIRMED SIGNAL</span></div>
+    <strong>Main Episode</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.</blockquote>
+
+  <div class="card-actions"><span class="source-link disabled">No source link</span><div class="copy-actions"><button type="button" data-copy-target="trending-2-podcast">Copy podcast notes</button><button type="button" data-copy-target="trending-2-reel">Copy reel idea</button><button type="button" data-copy-target="trending-2-patreon">Copy Patreon post</button></div></div>
+  <textarea id="trending-2-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Himesh Mankad reporting strong advance bookings for Ramayana.
+
+Discussion: 5.7/10
+Confidence: CONFIRMED SIGNAL (7.2/10)
+
+Khandaan Take: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.
+
+Source: No source link</textarea><textarea id="trending-2-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.
+
+Story: Himesh Mankad reporting strong advance bookings for Ramayana.
+
+Talking point: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea><textarea id="trending-2-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Himesh Mankad reporting strong advance bookings for Ramayana.
+
+The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Film Release, Box Office, Industry Trend</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">3</span><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Trade analysts predicting an unusually strong Diwali box office</a></h3>
+<p class="story-dek">Forward-looking industry discussion</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>56</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="trending-3-podcast">Copy podcast notes</button><button type="button" data-copy-target="trending-3-reel">Copy reel idea</button><button type="button" data-copy-target="trending-3-patreon">Copy Patreon post</button></div></div>
+  <textarea id="trending-3-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Trade analysts predicting an unusually strong Diwali box office
+
+Discussion: 5.5/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="trending-3-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Story: Trade analysts predicting an unusually strong Diwali box office
+
+Talking point: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="trending-3-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Trade analysts predicting an unusually strong Diwali box office
+
+The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend, Box Office</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">4</span><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio</a></h3>
+<p class="story-dek">Interesting industry trend story</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>53</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="trending-4-podcast">Copy podcast notes</button><button type="button" data-copy-target="trending-4-reel">Copy reel idea</button><button type="button" data-copy-target="trending-4-patreon">Copy Patreon post</button></div></div>
+  <textarea id="trending-4-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Discussion: 5.3/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/maddock</textarea><textarea id="trending-4-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Story: Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Talking point: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea><textarea id="trending-4-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">under 1h old</span></div></div>
+  <div class="card-top"><span class="rank">5</span><div class="badge-row"><span class="badge badge-watch">WATCH</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">X (manual) <span>&middot;</span> industry / business</p>
+    <h3>Several users discussing the success of Saiyaara and whether it changes studio strategy.</h3>
+<p class="story-dek">Several users discussing the success of Saiyaara and whether it changes studio strategy.</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>52</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>56</b><span>VERIFY</span></div>
+    <strong>Newsletter</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.</blockquote>
+
+  <div class="card-actions"><span class="source-link disabled">No source link</span><div class="copy-actions"><button type="button" data-copy-target="trending-5-podcast">Copy podcast notes</button><button type="button" data-copy-target="trending-5-reel">Copy reel idea</button><button type="button" data-copy-target="trending-5-patreon">Copy Patreon post</button></div></div>
+  <textarea id="trending-5-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Several users discussing the success of Saiyaara and whether it changes studio strategy.
+
+Discussion: 5.2/10
+Confidence: VERIFY (5.6/10)
+
+Khandaan Take: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Several users discussing the success of Saiyaara and whether it changes studio strategy, but the more interesting story may be the business decision underneath it.
+
+Source: No source link</textarea><textarea id="trending-5-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Several users discussing the success of Saiyaara and whether it changes studio strategy, but the more interesting story may be the business decision underneath it.
+
+Story: Several users discussing the success of Saiyaara and whether it changes studio strategy.
+
+Talking point: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea><textarea id="trending-5-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Several users discussing the success of Saiyaara and whether it changes studio strategy.
+
+One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Several users discussing the success of Saiyaara and whether it changes studio strategy, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">6</span><div class="badge-row"><span class="badge badge-watch">WATCH</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / Reddit <span>&middot;</span> industry / business</p>
+    <h3><a href="https://reddit.com/r/bollywood/ott" target="_blank" rel="noopener noreferrer">Viewers arguing OTT releases are hurting cinema culture</a></h3>
+<p class="story-dek">Good podcast discussion topic</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>49</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>49</b><span>VERIFY</span></div>
+    <strong>Newsletter</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.</blockquote>
+<p class="listener-signal">1 submission(s) | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://reddit.com/r/bollywood/ott" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="trending-6-podcast">Copy podcast notes</button><button type="button" data-copy-target="trending-6-reel">Copy reel idea</button><button type="button" data-copy-target="trending-6-patreon">Copy Patreon post</button></div></div>
+  <textarea id="trending-6-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Viewers arguing OTT releases are hurting cinema culture
+
+Discussion: 4.9/10
+Confidence: VERIFY (4.9/10)
+
+Khandaan Take: Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Viewers arguing OTT releases are hurting cinema culture, but the more interesting story may be the business decision underneath it.
+
+Source: https://reddit.com/r/bollywood/ott</textarea><textarea id="trending-6-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Viewers arguing OTT releases are hurting cinema culture, but the more interesting story may be the business decision underneath it.
+
+Story: Viewers arguing OTT releases are hurting cinema culture
+
+Talking point: Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://reddit.com/r/bollywood/ott</textarea><textarea id="trending-6-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Viewers arguing OTT releases are hurting cinema culture
+
+Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://reddit.com/r/bollywood/ott</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Viewers arguing OTT releases are hurting cinema culture, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend, Streaming</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">7</span><div class="badge-row"><span class="badge badge-patreon">PATREON</span><span class="badge badge-reel-idea">REEL IDEA</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / Reddit <span>&middot;</span> trailer / music / craft</p>
+    <h3><a href="https://reddit.com/example" target="_blank" rel="noopener noreferrer">Reddit thinks Ramayana VFX look unfinished</a></h3>
+<p class="story-dek">Huge discussion happening ahead of release</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>46</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>49</b><span>VERIFY</span></div>
+    <strong>Reel</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://reddit.com/example" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="trending-7-podcast">Copy podcast notes</button><button type="button" data-copy-target="trending-7-reel">Copy reel idea</button><button type="button" data-copy-target="trending-7-patreon">Copy Patreon post</button></div></div>
+  <textarea id="trending-7-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Reddit thinks Ramayana VFX look unfinished
+
+Discussion: 4.6/10
+Confidence: VERIFY (4.9/10)
+
+Khandaan Take: A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?
+
+Editorial angle: Move past instant hype and judge the craft: what is the material promising, and what might the campaign be carefully hiding?
+
+Opening hook: Reddit thinks Ramayana VFX look unfinished: genuine creative promise, clever trailer engineering, or both?
+
+Source: https://reddit.com/example</textarea><textarea id="trending-7-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: Reddit thinks Ramayana VFX look unfinished: genuine creative promise, clever trailer engineering, or both?
+
+Story: Reddit thinks Ramayana VFX look unfinished
+
+Talking point: A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?
+
+On-screen question: After this first look, are you seated, cautiously curious, or waiting for reviews?
+
+Source: https://reddit.com/example</textarea><textarea id="trending-7-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Reddit thinks Ramayana VFX look unfinished
+
+A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?
+
+What we want to discuss: Move past instant hype and judge the craft: what is the material promising, and what might the campaign be carefully hiding?
+
+Patron question: After this first look, are you seated, cautiously curious, or waiting for reviews?
+
+Source: https://reddit.com/example</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Move past instant hype and judge the craft: what is the material promising, and what might the campaign be carefully hiding?</p>
+      <p><strong>Suggested hook</strong>Reddit thinks Ramayana VFX look unfinished: genuine creative promise, clever trailer engineering, or both?</p>
+      <p><strong>Patron poll</strong>After this first look, are you seated, cautiously curious, or waiting for reviews?</p>
+      <p><strong>Source badges</strong>Film Release</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">8</span><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> general Bollywood</p>
+    <h3><a href="https://x.com/example/saiyaara" target="_blank" rel="noopener noreferrer">Fans debating whether Saiyaara proves Bollywood audiences want romance again</a></h3>
+<p class="story-dek">Could signal a shift away from action-heavy releases</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>44</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Newsletter</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/saiyaara" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="trending-8-podcast">Copy podcast notes</button><button type="button" data-copy-target="trending-8-reel">Copy reel idea</button><button type="button" data-copy-target="trending-8-patreon">Copy Patreon post</button></div></div>
+  <textarea id="trending-8-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Fans debating whether Saiyaara proves Bollywood audiences want romance again
+
+Discussion: 4.3/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;
+
+Editorial angle: Identify what is confirmed, why audiences care now, and whether the story has enough consequence to survive the news cycle.
+
+Opening hook: Fans debating whether Saiyaara proves Bollywood audiences want romance again: the headline is loud, but is there a conversation underneath it?
+
+Source: https://x.com/example/saiyaara</textarea><textarea id="trending-8-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: Fans debating whether Saiyaara proves Bollywood audiences want romance again: the headline is loud, but is there a conversation underneath it?
+
+Story: Fans debating whether Saiyaara proves Bollywood audiences want romance again
+
+Talking point: I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;
+
+On-screen question: Should Khandaan discuss this now, wait for more facts, or leave it alone?
+
+Source: https://x.com/example/saiyaara</textarea><textarea id="trending-8-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Fans debating whether Saiyaara proves Bollywood audiences want romance again
+
+I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;
+
+What we want to discuss: Identify what is confirmed, why audiences care now, and whether the story has enough consequence to survive the news cycle.
+
+Patron question: Should Khandaan discuss this now, wait for more facts, or leave it alone?
+
+Source: https://x.com/example/saiyaara</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Identify what is confirmed, why audiences care now, and whether the story has enough consequence to survive the news cycle.</p>
+      <p><strong>Suggested hook</strong>Fans debating whether Saiyaara proves Bollywood audiences want romance again: the headline is loud, but is there a conversation underneath it?</p>
+      <p><strong>Patron poll</strong>Should Khandaan discuss this now, wait for more facts, or leave it alone?</p>
+      <p><strong>Source badges</strong>None</p>
+    </div>
+  </details>
+</article></div>
+</section>
+<section id="fan-war" class="dashboard-section">
+  <div class="section-heading"><div><p>THE TEMPERATURE CHECK</p><h2>Fan War Watch</h2></div><span>05</span></div>
+  <div class="card-grid">
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-up">&uarr; UP</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">1</span><div class="badge-row"><span class="badge badge-high-interest">HIGH INTEREST</span><span class="badge badge-fan-war">FAN WAR</span><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> fan culture / controversy</p>
+    <h3><a href="https://x.com/example/ranbir" target="_blank" rel="noopener noreferrer">Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star</a></h3>
+<p class="story-dek">Fan wars always generate engagement</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>67</b><span>Discussion</span></div>
+    <div><b>78</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/ranbir" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="fan-war-1-podcast">Copy podcast notes</button><button type="button" data-copy-target="fan-war-1-reel">Copy reel idea</button><button type="button" data-copy-target="fan-war-1-patreon">Copy Patreon post</button></div></div>
+  <textarea id="fan-war-1-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+Discussion: 6.7/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+Editorial angle: Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.
+
+Opening hook: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?
+
+Source: https://x.com/example/ranbir</textarea><textarea id="fan-war-1-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?
+
+Story: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+Talking point: The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+On-screen question: Is this a meaningful debate, harmless fandom theatre, or a cue to log off?
+
+Source: https://x.com/example/ranbir</textarea><textarea id="fan-war-1-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+What we want to discuss: Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.
+
+Patron question: Is this a meaningful debate, harmless fandom theatre, or a cue to log off?
+
+Source: https://x.com/example/ranbir</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.</p>
+      <p><strong>Suggested hook</strong>Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?</p>
+      <p><strong>Patron poll</strong>Is this a meaningful debate, harmless fandom theatre, or a cue to log off?</p>
+      <p><strong>Source badges</strong>Fan War</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">2</span><div class="badge-row"><span class="badge badge-watch">WATCH</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / Reddit <span>&middot;</span> general Bollywood</p>
+    <h3><a href="https://reddit.com/r/bollywood/nepo" target="_blank" rel="noopener noreferrer">Discussion on whether audiences care less about nepotism than they did in 2020</a></h3>
+<p class="story-dek">Cultural trend worth examining</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>43</b><span>Discussion</span></div>
+    <div><b>34</b><span>Heat</span></div>
+    <div><b>49</b><span>VERIFY</span></div>
+    <strong>Newsletter</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;</blockquote>
+<p class="listener-signal">1 submission(s) | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://reddit.com/r/bollywood/nepo" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="fan-war-2-podcast">Copy podcast notes</button><button type="button" data-copy-target="fan-war-2-reel">Copy reel idea</button><button type="button" data-copy-target="fan-war-2-patreon">Copy Patreon post</button></div></div>
+  <textarea id="fan-war-2-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Discussion on whether audiences care less about nepotism than they did in 2020
+
+Discussion: 4.3/10
+Confidence: VERIFY (4.9/10)
+
+Khandaan Take: I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;
+
+Editorial angle: Identify what is confirmed, why audiences care now, and whether the story has enough consequence to survive the news cycle.
+
+Opening hook: Discussion on whether audiences care less about nepotism than they did in 2020: the headline is loud, but is there a conversation underneath it?
+
+Source: https://reddit.com/r/bollywood/nepo</textarea><textarea id="fan-war-2-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: Discussion on whether audiences care less about nepotism than they did in 2020: the headline is loud, but is there a conversation underneath it?
+
+Story: Discussion on whether audiences care less about nepotism than they did in 2020
+
+Talking point: I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;
+
+On-screen question: Should Khandaan discuss this now, wait for more facts, or leave it alone?
+
+Source: https://reddit.com/r/bollywood/nepo</textarea><textarea id="fan-war-2-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Discussion on whether audiences care less about nepotism than they did in 2020
+
+I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;
+
+What we want to discuss: Identify what is confirmed, why audiences care now, and whether the story has enough consequence to survive the news cycle.
+
+Patron question: Should Khandaan discuss this now, wait for more facts, or leave it alone?
+
+Source: https://reddit.com/r/bollywood/nepo</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Identify what is confirmed, why audiences care now, and whether the story has enough consequence to survive the news cycle.</p>
+      <p><strong>Suggested hook</strong>Discussion on whether audiences care less about nepotism than they did in 2020: the headline is loud, but is there a conversation underneath it?</p>
+      <p><strong>Patron poll</strong>Should Khandaan discuss this now, wait for more facts, or leave it alone?</p>
+      <p><strong>Source badges</strong>None</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">under 1h old</span></div></div>
+  <div class="card-top"><span class="rank">3</span><div class="badge-row"><span class="badge badge-breaking">BREAKING</span><span class="badge badge-podcast">PODCAST</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">X (manual) <span>&middot;</span> industry / business</p>
+    <h3>Himesh Mankad reporting strong advance bookings for Ramayana.</h3>
+<p class="story-dek">Himesh Mankad reporting strong advance bookings for Ramayana.</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>57</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>72</b><span>CONFIRMED SIGNAL</span></div>
+    <strong>Main Episode</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.</blockquote>
+
+  <div class="card-actions"><span class="source-link disabled">No source link</span><div class="copy-actions"><button type="button" data-copy-target="fan-war-3-podcast">Copy podcast notes</button><button type="button" data-copy-target="fan-war-3-reel">Copy reel idea</button><button type="button" data-copy-target="fan-war-3-patreon">Copy Patreon post</button></div></div>
+  <textarea id="fan-war-3-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Himesh Mankad reporting strong advance bookings for Ramayana.
+
+Discussion: 5.7/10
+Confidence: CONFIRMED SIGNAL (7.2/10)
+
+Khandaan Take: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.
+
+Source: No source link</textarea><textarea id="fan-war-3-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.
+
+Story: Himesh Mankad reporting strong advance bookings for Ramayana.
+
+Talking point: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea><textarea id="fan-war-3-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Himesh Mankad reporting strong advance bookings for Ramayana.
+
+The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Film Release, Box Office, Industry Trend</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">4</span><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Trade analysts predicting an unusually strong Diwali box office</a></h3>
+<p class="story-dek">Forward-looking industry discussion</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>56</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="fan-war-4-podcast">Copy podcast notes</button><button type="button" data-copy-target="fan-war-4-reel">Copy reel idea</button><button type="button" data-copy-target="fan-war-4-patreon">Copy Patreon post</button></div></div>
+  <textarea id="fan-war-4-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Trade analysts predicting an unusually strong Diwali box office
+
+Discussion: 5.5/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="fan-war-4-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Story: Trade analysts predicting an unusually strong Diwali box office
+
+Talking point: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="fan-war-4-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Trade analysts predicting an unusually strong Diwali box office
+
+The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend, Box Office</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><span class="rank">5</span><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio</a></h3>
+<p class="story-dek">Interesting industry trend story</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>53</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="fan-war-5-podcast">Copy podcast notes</button><button type="button" data-copy-target="fan-war-5-reel">Copy reel idea</button><button type="button" data-copy-target="fan-war-5-patreon">Copy Patreon post</button></div></div>
+  <textarea id="fan-war-5-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Discussion: 5.3/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/maddock</textarea><textarea id="fan-war-5-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Story: Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Talking point: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea><textarea id="fan-war-5-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend</p>
+    </div>
+  </details>
+</article></div>
+</section>
+<section id="listener-submissions" class="dashboard-section">
+  <div class="section-heading"><div><p>FROM THE AUDIENCE</p><h2>Listener Submissions</h2></div><span>06</span></div>
+  <div class="card-grid">
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-up">&uarr; UP</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-high-interest">HIGH INTEREST</span><span class="badge badge-fan-war">FAN WAR</span><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> fan culture / controversy</p>
+    <h3><a href="https://x.com/example/ranbir" target="_blank" rel="noopener noreferrer">Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star</a></h3>
+<p class="story-dek">Fan wars always generate engagement</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>67</b><span>Discussion</span></div>
+    <div><b>78</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/ranbir" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="listener-submissions-1-podcast">Copy podcast notes</button><button type="button" data-copy-target="listener-submissions-1-reel">Copy reel idea</button><button type="button" data-copy-target="listener-submissions-1-patreon">Copy Patreon post</button></div></div>
+  <textarea id="listener-submissions-1-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+Discussion: 6.7/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+Editorial angle: Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.
+
+Opening hook: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?
+
+Source: https://x.com/example/ranbir</textarea><textarea id="listener-submissions-1-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?
+
+Story: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+Talking point: The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+On-screen question: Is this a meaningful debate, harmless fandom theatre, or a cue to log off?
+
+Source: https://x.com/example/ranbir</textarea><textarea id="listener-submissions-1-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+What we want to discuss: Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.
+
+Patron question: Is this a meaningful debate, harmless fandom theatre, or a cue to log off?
+
+Source: https://x.com/example/ranbir</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.</p>
+      <p><strong>Suggested hook</strong>Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?</p>
+      <p><strong>Patron poll</strong>Is this a meaningful debate, harmless fandom theatre, or a cue to log off?</p>
+      <p><strong>Source badges</strong>Fan War</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Trade analysts predicting an unusually strong Diwali box office</a></h3>
+<p class="story-dek">Forward-looking industry discussion</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>56</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="listener-submissions-2-podcast">Copy podcast notes</button><button type="button" data-copy-target="listener-submissions-2-reel">Copy reel idea</button><button type="button" data-copy-target="listener-submissions-2-patreon">Copy Patreon post</button></div></div>
+  <textarea id="listener-submissions-2-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Trade analysts predicting an unusually strong Diwali box office
+
+Discussion: 5.5/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="listener-submissions-2-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Story: Trade analysts predicting an unusually strong Diwali box office
+
+Talking point: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="listener-submissions-2-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Trade analysts predicting an unusually strong Diwali box office
+
+The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend, Box Office</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio</a></h3>
+<p class="story-dek">Interesting industry trend story</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>53</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="listener-submissions-3-podcast">Copy podcast notes</button><button type="button" data-copy-target="listener-submissions-3-reel">Copy reel idea</button><button type="button" data-copy-target="listener-submissions-3-patreon">Copy Patreon post</button></div></div>
+  <textarea id="listener-submissions-3-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Discussion: 5.3/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/maddock</textarea><textarea id="listener-submissions-3-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Story: Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Talking point: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea><textarea id="listener-submissions-3-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-watch">WATCH</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / Reddit <span>&middot;</span> industry / business</p>
+    <h3><a href="https://reddit.com/r/bollywood/ott" target="_blank" rel="noopener noreferrer">Viewers arguing OTT releases are hurting cinema culture</a></h3>
+<p class="story-dek">Good podcast discussion topic</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>49</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>49</b><span>VERIFY</span></div>
+    <strong>Newsletter</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.</blockquote>
+<p class="listener-signal">1 submission(s) | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://reddit.com/r/bollywood/ott" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="listener-submissions-4-podcast">Copy podcast notes</button><button type="button" data-copy-target="listener-submissions-4-reel">Copy reel idea</button><button type="button" data-copy-target="listener-submissions-4-patreon">Copy Patreon post</button></div></div>
+  <textarea id="listener-submissions-4-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Viewers arguing OTT releases are hurting cinema culture
+
+Discussion: 4.9/10
+Confidence: VERIFY (4.9/10)
+
+Khandaan Take: Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Viewers arguing OTT releases are hurting cinema culture, but the more interesting story may be the business decision underneath it.
+
+Source: https://reddit.com/r/bollywood/ott</textarea><textarea id="listener-submissions-4-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Viewers arguing OTT releases are hurting cinema culture, but the more interesting story may be the business decision underneath it.
+
+Story: Viewers arguing OTT releases are hurting cinema culture
+
+Talking point: Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://reddit.com/r/bollywood/ott</textarea><textarea id="listener-submissions-4-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Viewers arguing OTT releases are hurting cinema culture
+
+Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://reddit.com/r/bollywood/ott</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Viewers arguing OTT releases are hurting cinema culture, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend, Streaming</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-patreon">PATREON</span><span class="badge badge-reel-idea">REEL IDEA</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / Reddit <span>&middot;</span> trailer / music / craft</p>
+    <h3><a href="https://reddit.com/example" target="_blank" rel="noopener noreferrer">Reddit thinks Ramayana VFX look unfinished</a></h3>
+<p class="story-dek">Huge discussion happening ahead of release</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>46</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>49</b><span>VERIFY</span></div>
+    <strong>Reel</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://reddit.com/example" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="listener-submissions-5-podcast">Copy podcast notes</button><button type="button" data-copy-target="listener-submissions-5-reel">Copy reel idea</button><button type="button" data-copy-target="listener-submissions-5-patreon">Copy Patreon post</button></div></div>
+  <textarea id="listener-submissions-5-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Reddit thinks Ramayana VFX look unfinished
+
+Discussion: 4.6/10
+Confidence: VERIFY (4.9/10)
+
+Khandaan Take: A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?
+
+Editorial angle: Move past instant hype and judge the craft: what is the material promising, and what might the campaign be carefully hiding?
+
+Opening hook: Reddit thinks Ramayana VFX look unfinished: genuine creative promise, clever trailer engineering, or both?
+
+Source: https://reddit.com/example</textarea><textarea id="listener-submissions-5-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: Reddit thinks Ramayana VFX look unfinished: genuine creative promise, clever trailer engineering, or both?
+
+Story: Reddit thinks Ramayana VFX look unfinished
+
+Talking point: A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?
+
+On-screen question: After this first look, are you seated, cautiously curious, or waiting for reviews?
+
+Source: https://reddit.com/example</textarea><textarea id="listener-submissions-5-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Reddit thinks Ramayana VFX look unfinished
+
+A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?
+
+What we want to discuss: Move past instant hype and judge the craft: what is the material promising, and what might the campaign be carefully hiding?
+
+Patron question: After this first look, are you seated, cautiously curious, or waiting for reviews?
+
+Source: https://reddit.com/example</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Move past instant hype and judge the craft: what is the material promising, and what might the campaign be carefully hiding?</p>
+      <p><strong>Suggested hook</strong>Reddit thinks Ramayana VFX look unfinished: genuine creative promise, clever trailer engineering, or both?</p>
+      <p><strong>Patron poll</strong>After this first look, are you seated, cautiously curious, or waiting for reviews?</p>
+      <p><strong>Source badges</strong>Film Release</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> general Bollywood</p>
+    <h3><a href="https://x.com/example/saiyaara" target="_blank" rel="noopener noreferrer">Fans debating whether Saiyaara proves Bollywood audiences want romance again</a></h3>
+<p class="story-dek">Could signal a shift away from action-heavy releases</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>44</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Newsletter</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/saiyaara" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="listener-submissions-6-podcast">Copy podcast notes</button><button type="button" data-copy-target="listener-submissions-6-reel">Copy reel idea</button><button type="button" data-copy-target="listener-submissions-6-patreon">Copy Patreon post</button></div></div>
+  <textarea id="listener-submissions-6-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Fans debating whether Saiyaara proves Bollywood audiences want romance again
+
+Discussion: 4.3/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;
+
+Editorial angle: Identify what is confirmed, why audiences care now, and whether the story has enough consequence to survive the news cycle.
+
+Opening hook: Fans debating whether Saiyaara proves Bollywood audiences want romance again: the headline is loud, but is there a conversation underneath it?
+
+Source: https://x.com/example/saiyaara</textarea><textarea id="listener-submissions-6-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: Fans debating whether Saiyaara proves Bollywood audiences want romance again: the headline is loud, but is there a conversation underneath it?
+
+Story: Fans debating whether Saiyaara proves Bollywood audiences want romance again
+
+Talking point: I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;
+
+On-screen question: Should Khandaan discuss this now, wait for more facts, or leave it alone?
+
+Source: https://x.com/example/saiyaara</textarea><textarea id="listener-submissions-6-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Fans debating whether Saiyaara proves Bollywood audiences want romance again
+
+I can see why this is on the timeline. I am less convinced it can survive ten minutes of conversation without us asking, &#x27;Yes, but what actually happened?&#x27;
+
+What we want to discuss: Identify what is confirmed, why audiences care now, and whether the story has enough consequence to survive the news cycle.
+
+Patron question: Should Khandaan discuss this now, wait for more facts, or leave it alone?
+
+Source: https://x.com/example/saiyaara</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Identify what is confirmed, why audiences care now, and whether the story has enough consequence to survive the news cycle.</p>
+      <p><strong>Suggested hook</strong>Fans debating whether Saiyaara proves Bollywood audiences want romance again: the headline is loud, but is there a conversation underneath it?</p>
+      <p><strong>Patron poll</strong>Should Khandaan discuss this now, wait for more facts, or leave it alone?</p>
+      <p><strong>Source badges</strong>None</p>
+    </div>
+  </details>
+</article></div>
+</section>
+<section id="reels" class="dashboard-section">
+  <div class="section-heading"><div><p>CUT FOR VERTICAL</p><h2>Best Reel Opportunities</h2></div><span>01</span></div>
+  <div class="card-grid">
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-patreon">PATREON</span><span class="badge badge-reel-idea">REEL IDEA</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / Reddit <span>&middot;</span> trailer / music / craft</p>
+    <h3><a href="https://reddit.com/example" target="_blank" rel="noopener noreferrer">Reddit thinks Ramayana VFX look unfinished</a></h3>
+<p class="story-dek">Huge discussion happening ahead of release</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>46</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>49</b><span>VERIFY</span></div>
+    <strong>Reel</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://reddit.com/example" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="reels-1-podcast">Copy podcast notes</button><button type="button" data-copy-target="reels-1-reel">Copy reel idea</button><button type="button" data-copy-target="reels-1-patreon">Copy Patreon post</button></div></div>
+  <textarea id="reels-1-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Reddit thinks Ramayana VFX look unfinished
+
+Discussion: 4.6/10
+Confidence: VERIFY (4.9/10)
+
+Khandaan Take: A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?
+
+Editorial angle: Move past instant hype and judge the craft: what is the material promising, and what might the campaign be carefully hiding?
+
+Opening hook: Reddit thinks Ramayana VFX look unfinished: genuine creative promise, clever trailer engineering, or both?
+
+Source: https://reddit.com/example</textarea><textarea id="reels-1-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: Reddit thinks Ramayana VFX look unfinished: genuine creative promise, clever trailer engineering, or both?
+
+Story: Reddit thinks Ramayana VFX look unfinished
+
+Talking point: A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?
+
+On-screen question: After this first look, are you seated, cautiously curious, or waiting for reviews?
+
+Source: https://reddit.com/example</textarea><textarea id="reels-1-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Reddit thinks Ramayana VFX look unfinished
+
+A trailer has two minutes to make us lose all critical judgment. Fine, job done. Now: does the film underneath it look any good?
+
+What we want to discuss: Move past instant hype and judge the craft: what is the material promising, and what might the campaign be carefully hiding?
+
+Patron question: After this first look, are you seated, cautiously curious, or waiting for reviews?
+
+Source: https://reddit.com/example</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Move past instant hype and judge the craft: what is the material promising, and what might the campaign be carefully hiding?</p>
+      <p><strong>Suggested hook</strong>Reddit thinks Ramayana VFX look unfinished: genuine creative promise, clever trailer engineering, or both?</p>
+      <p><strong>Patron poll</strong>After this first look, are you seated, cautiously curious, or waiting for reviews?</p>
+      <p><strong>Source badges</strong>Film Release</p>
+    </div>
+  </details>
+</article></div>
+</section>
+<section id="patreon" class="dashboard-section">
+  <div class="section-heading"><div><p>FOR THE MEMBERS</p><h2>Best Patreon Discussions</h2></div><span>03</span></div>
+  <div class="card-grid">
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-up">&uarr; UP</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-high-interest">HIGH INTEREST</span><span class="badge badge-fan-war">FAN WAR</span><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> fan culture / controversy</p>
+    <h3><a href="https://x.com/example/ranbir" target="_blank" rel="noopener noreferrer">Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star</a></h3>
+<p class="story-dek">Fan wars always generate engagement</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>67</b><span>Discussion</span></div>
+    <div><b>78</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/ranbir" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="patreon-1-podcast">Copy podcast notes</button><button type="button" data-copy-target="patreon-1-reel">Copy reel idea</button><button type="button" data-copy-target="patreon-1-patreon">Copy Patreon post</button></div></div>
+  <textarea id="patreon-1-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+Discussion: 6.7/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+Editorial angle: Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.
+
+Opening hook: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?
+
+Source: https://x.com/example/ranbir</textarea><textarea id="patreon-1-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?
+
+Story: Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+Talking point: The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+On-screen question: Is this a meaningful debate, harmless fandom theatre, or a cue to log off?
+
+Source: https://x.com/example/ranbir</textarea><textarea id="patreon-1-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star
+
+The &#x27;biggest star&#x27; debate is Bollywood astrology: everyone has a chart, nobody agrees on the planets, and somehow the conclusion is always their favourite. What are we measuring?
+
+What we want to discuss: Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.
+
+Patron question: Is this a meaningful debate, harmless fandom theatre, or a cue to log off?
+
+Source: https://x.com/example/ranbir</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Separate the actual story from the fandom fog, then ask who benefits from keeping the argument alive.</p>
+      <p><strong>Suggested hook</strong>Debate over whether Ranbir Kapoor is now Bollywood&#x27;s biggest male star: real cultural flashpoint, or another exhausting shift at the fan-war factory?</p>
+      <p><strong>Patron poll</strong>Is this a meaningful debate, harmless fandom theatre, or a cue to log off?</p>
+      <p><strong>Source badges</strong>Fan War</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Trade analysts predicting an unusually strong Diwali box office</a></h3>
+<p class="story-dek">Forward-looking industry discussion</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>56</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="patreon-2-podcast">Copy podcast notes</button><button type="button" data-copy-target="patreon-2-reel">Copy reel idea</button><button type="button" data-copy-target="patreon-2-patreon">Copy Patreon post</button></div></div>
+  <textarea id="patreon-2-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Trade analysts predicting an unusually strong Diwali box office
+
+Discussion: 5.5/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="patreon-2-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Story: Trade analysts predicting an unusually strong Diwali box office
+
+Talking point: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="patreon-2-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Trade analysts predicting an unusually strong Diwali box office
+
+The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend, Box Office</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio</a></h3>
+<p class="story-dek">Interesting industry trend story</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>53</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="patreon-3-podcast">Copy podcast notes</button><button type="button" data-copy-target="patreon-3-reel">Copy reel idea</button><button type="button" data-copy-target="patreon-3-patreon">Copy Patreon post</button></div></div>
+  <textarea id="patreon-3-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Discussion: 5.3/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/maddock</textarea><textarea id="patreon-3-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Story: Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Talking point: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea><textarea id="patreon-3-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend</p>
+    </div>
+  </details>
+</article></div>
+</section>
+<section id="industry" class="dashboard-section">
+  <div class="section-heading"><div><p>BEYOND THE HEADLINES</p><h2>Industry Trend Watch</h2></div><span>05</span></div>
+  <div class="card-grid">
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">under 1h old</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-breaking">BREAKING</span><span class="badge badge-podcast">PODCAST</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">X (manual) <span>&middot;</span> industry / business</p>
+    <h3>Himesh Mankad reporting strong advance bookings for Ramayana.</h3>
+<p class="story-dek">Himesh Mankad reporting strong advance bookings for Ramayana.</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>57</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>72</b><span>CONFIRMED SIGNAL</span></div>
+    <strong>Main Episode</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.</blockquote>
+
+  <div class="card-actions"><span class="source-link disabled">No source link</span><div class="copy-actions"><button type="button" data-copy-target="industry-1-podcast">Copy podcast notes</button><button type="button" data-copy-target="industry-1-reel">Copy reel idea</button><button type="button" data-copy-target="industry-1-patreon">Copy Patreon post</button></div></div>
+  <textarea id="industry-1-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Himesh Mankad reporting strong advance bookings for Ramayana.
+
+Discussion: 5.7/10
+Confidence: CONFIRMED SIGNAL (7.2/10)
+
+Khandaan Take: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.
+
+Source: No source link</textarea><textarea id="industry-1-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.
+
+Story: Himesh Mankad reporting strong advance bookings for Ramayana.
+
+Talking point: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea><textarea id="industry-1-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Himesh Mankad reporting strong advance bookings for Ramayana.
+
+The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Himesh Mankad reporting strong advance bookings for Ramayana, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Film Release, Box Office, Industry Trend</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Trade analysts predicting an unusually strong Diwali box office</a></h3>
+<p class="story-dek">Forward-looking industry discussion</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>56</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/boxoffice" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="industry-2-podcast">Copy podcast notes</button><button type="button" data-copy-target="industry-2-reel">Copy reel idea</button><button type="button" data-copy-target="industry-2-patreon">Copy Patreon post</button></div></div>
+  <textarea id="industry-2-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Trade analysts predicting an unusually strong Diwali box office
+
+Discussion: 5.5/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="industry-2-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.
+
+Story: Trade analysts predicting an unusually strong Diwali box office
+
+Talking point: The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea><textarea id="industry-2-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Trade analysts predicting an unusually strong Diwali box office
+
+The advance-booking screenshots are here, so apparently we are all trade analysts until Monday morning. The number is interesting; the panic or victory lap around it is usually more interesting.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/boxoffice</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Trade analysts predicting an unusually strong Diwali box office, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend, Box Office</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-patreon">PATREON</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / X <span>&middot;</span> industry / business</p>
+    <h3><a href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio</a></h3>
+<p class="story-dek">Interesting industry trend story</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>53</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>55</b><span>VERIFY</span></div>
+    <strong>Patreon Discussion</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.</blockquote>
+<p class="listener-signal">1 submission(s) | Patreon member | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://x.com/example/maddock" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="industry-3-podcast">Copy podcast notes</button><button type="button" data-copy-target="industry-3-reel">Copy reel idea</button><button type="button" data-copy-target="industry-3-patreon">Copy Patreon post</button></div></div>
+  <textarea id="industry-3-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Discussion: 5.3/10
+Confidence: VERIFY (5.5/10)
+
+Khandaan Take: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Source: https://x.com/example/maddock</textarea><textarea id="industry-3-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.
+
+Story: Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+Talking point: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea><textarea id="industry-3-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio
+
+One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://x.com/example/maddock</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Growing discussion about whether Maddock is replacing YRF as Bollywood&#x27;s most reliable studio, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">under 1h old</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-watch">WATCH</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">X (manual) <span>&middot;</span> industry / business</p>
+    <h3>Several users discussing the success of Saiyaara and whether it changes studio strategy.</h3>
+<p class="story-dek">Several users discussing the success of Saiyaara and whether it changes studio strategy.</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>52</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>56</b><span>VERIFY</span></div>
+    <strong>Newsletter</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.</blockquote>
+
+  <div class="card-actions"><span class="source-link disabled">No source link</span><div class="copy-actions"><button type="button" data-copy-target="industry-4-podcast">Copy podcast notes</button><button type="button" data-copy-target="industry-4-reel">Copy reel idea</button><button type="button" data-copy-target="industry-4-patreon">Copy Patreon post</button></div></div>
+  <textarea id="industry-4-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Several users discussing the success of Saiyaara and whether it changes studio strategy.
+
+Discussion: 5.2/10
+Confidence: VERIFY (5.6/10)
+
+Khandaan Take: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Several users discussing the success of Saiyaara and whether it changes studio strategy, but the more interesting story may be the business decision underneath it.
+
+Source: No source link</textarea><textarea id="industry-4-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Several users discussing the success of Saiyaara and whether it changes studio strategy, but the more interesting story may be the business decision underneath it.
+
+Story: Several users discussing the success of Saiyaara and whether it changes studio strategy.
+
+Talking point: One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea><textarea id="industry-4-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Several users discussing the success of Saiyaara and whether it changes studio strategy.
+
+One hit and we immediately announce a new studio blueprint; one flop and we hold a funeral. Let us see whether there is a real strategy here or just hindsight with a PowerPoint.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: No source link</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Several users discussing the success of Saiyaara and whether it changes studio strategy, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend</p>
+    </div>
+  </details>
+</article>
+<article class="story-card">
+  <div class="media-wrap"><div class="story-media image-error"><span class="image-fallback">KHANDAAN</span></div><div class="story-status"><span class="trend trend-new">&#10022; NEW</span><span class="age">listener suggestion</span></div></div>
+  <div class="card-top"><div class="badge-row"><span class="badge badge-watch">WATCH</span></div></div>
+  <div class="story-copy">
+    <p class="eyebrow">Listener / Reddit <span>&middot;</span> industry / business</p>
+    <h3><a href="https://reddit.com/r/bollywood/ott" target="_blank" rel="noopener noreferrer">Viewers arguing OTT releases are hurting cinema culture</a></h3>
+<p class="story-dek">Good podcast discussion topic</p>
+  </div>
+  <div class="editorial-meta">
+    <div><b>49</b><span>Discussion</span></div>
+    <div><b>18</b><span>Heat</span></div>
+    <div><b>49</b><span>VERIFY</span></div>
+    <strong>Newsletter</strong>
+  </div>
+  <blockquote><span>THE KHANDAAN ANGLE</span>Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.</blockquote>
+<p class="listener-signal">1 submission(s) | credit: Asim</p>
+  <div class="card-actions"><a class="source-link" href="https://reddit.com/r/bollywood/ott" target="_blank" rel="noopener noreferrer">Open source <span>&nearr;</span></a><div class="copy-actions"><button type="button" data-copy-target="industry-5-podcast">Copy podcast notes</button><button type="button" data-copy-target="industry-5-reel">Copy reel idea</button><button type="button" data-copy-target="industry-5-patreon">Copy Patreon post</button></div></div>
+  <textarea id="industry-5-podcast" class="copy-payload" aria-hidden="true">PODCAST NOTES
+
+Viewers arguing OTT releases are hurting cinema culture
+
+Discussion: 4.9/10
+Confidence: VERIFY (4.9/10)
+
+Khandaan Take: Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.
+
+Editorial angle: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Opening hook: The headline is Viewers arguing OTT releases are hurting cinema culture, but the more interesting story may be the business decision underneath it.
+
+Source: https://reddit.com/r/bollywood/ott</textarea><textarea id="industry-5-reel" class="copy-payload" aria-hidden="true">REEL IDEA
+
+Hook: The headline is Viewers arguing OTT releases are hurting cinema culture, but the more interesting story may be the business decision underneath it.
+
+Story: Viewers arguing OTT releases are hurting cinema culture
+
+Talking point: Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.
+
+On-screen question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://reddit.com/r/bollywood/ott</textarea><textarea id="industry-5-patreon" class="copy-payload" aria-hidden="true">PATREON POST
+
+Viewers arguing OTT releases are hurting cinema culture
+
+Every OTT debate becomes &#x27;cinema is dying&#x27; within four replies. Maybe the better question is which films still make people leave the sofa, and why.
+
+What we want to discuss: Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?
+
+Patron question: Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?
+
+Source: https://reddit.com/r/bollywood/ott</textarea>
+  <details>
+    <summary>Open planning notes</summary>
+    <div class="details-body">
+      <p><strong>Editorial angle</strong>Follow the money and incentives: what does this reveal about how Hindi cinema is being packaged, financed, or measured?</p>
+      <p><strong>Suggested hook</strong>The headline is Viewers arguing OTT releases are hurting cinema culture, but the more interesting story may be the business decision underneath it.</p>
+      <p><strong>Patron poll</strong>Will this industry move improve the films, improve the marketing, or merely improve the spreadsheet?</p>
+      <p><strong>Source badges</strong>Industry Trend, Streaming</p>
+    </div>
+  </details>
+</article></div>
+</section></main>
+  <footer><div class="shell footer-grid"><div class="footer-about"><strong>ABOUT KHANDAAN BOLLYWOOD RADAR</strong><p>Khandaan Bollywood Radar combines news, fan discussions, Reddit conversations, X chatter and listener submissions to surface the Bollywood stories worth talking about.</p></div><div class="footer-meta"><a class="producer-link" href="https://www.youtube.com/@KhandaanPodcast" target="_blank" rel="noopener noreferrer">Produced by Khandaan: A Bollywood Podcast</a><span>Static share edition: upload this one HTML file as-is.</span></div></div></footer>
+  <script>
+    function fallbackCopy(text) {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      const copied = document.execCommand('copy');
+      area.remove();
+      return copied;
+    }
+    async function copyPlanning(button) {
+      const payload = document.getElementById(button.dataset.copyTarget);
+      if (!payload) return;
+      let copied = false;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(payload.value);
+          copied = true;
+        } else {
+          copied = fallbackCopy(payload.value);
+        }
+      } catch (error) {
+        copied = fallbackCopy(payload.value);
+      }
+      const original = button.textContent;
+      button.textContent = copied ? 'Copied!' : 'Select and copy';
+      button.classList.toggle('copied', copied);
+      window.setTimeout(() => { button.textContent = original; button.classList.remove('copied'); }, 1600);
+    }
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-copy-target]');
+      if (button) copyPlanning(button);
+    });
+    function downloadableHtml() {
+      return '<!doctype html>\n' + document.documentElement.outerHTML;
+    }
+    function downloadDashboard() {
+      const blob = new Blob([downloadableHtml()], { type: 'text/html' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'khandaan-dashboard.html';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(link.href);
+      document.getElementById('share-status').textContent = 'Share-ready HTML downloaded.';
+    }
+    async function shareDashboard() {
+      const status = document.getElementById('share-status');
+      const publicUrl = document.body.dataset.publicUrl;
+      const data = { title: 'Khandaan Bollywood Radar', text: 'What Bollywood fans are talking about this week' };
+      if (publicUrl) data.url = publicUrl;
+      try {
+        if (navigator.share && publicUrl) {
+          await navigator.share(data);
+          status.textContent = 'Dashboard shared.';
+        } else if (publicUrl) {
+          const copied = navigator.clipboard && window.isSecureContext ? (await navigator.clipboard.writeText(publicUrl), true) : fallbackCopy(publicUrl);
+          status.textContent = copied ? 'Public link copied.' : 'Public link: ' + publicUrl;
+        } else {
+          downloadDashboard();
+          status.textContent = 'No public URL configured; share-ready HTML downloaded.';
+        }
+      } catch (error) {
+        if (error && error.name === 'AbortError') return;
+        status.textContent = publicUrl ? 'Share this link: ' + publicUrl : 'Use Download HTML to share this file.';
+      }
+    }
+    document.getElementById('share-dashboard').addEventListener('click', shareDashboard);
+    document.getElementById('download-dashboard').addEventListener('click', downloadDashboard);
+  </script>
+</body>
+</html>

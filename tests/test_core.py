@@ -7,6 +7,7 @@ from unittest.mock import Mock, patch
 
 from khandaan_radar.dedupe import canonical_url, deduplicate_stories
 from khandaan_radar.briefing import render_briefing
+from khandaan_radar.cli import build_parser, publish_root_homepage
 from khandaan_radar.dashboard import render_dashboard
 from khandaan_radar.models import Story, Submission
 from khandaan_radar.scoring import rank_stories
@@ -15,6 +16,19 @@ from khandaan_radar.summarizer import fallback_editorial
 
 
 class CoreTests(unittest.TestCase):
+    def test_public_homepage_is_copied_to_site_root(self):
+        self.assertEqual(build_parser().parse_args([]).root_output, "index.html")
+        with tempfile.TemporaryDirectory() as directory:
+            tmp_path = Path(directory)
+            public_output = tmp_path / "public" / "index.html"
+            root_output = tmp_path / "index.html"
+            public_output.parent.mkdir()
+            public_output.write_text("<html>dashboard</html>", encoding="utf-8")
+
+            publish_root_homepage(public_output, root_output)
+
+            self.assertEqual(root_output.read_bytes(), public_output.read_bytes())
+
     def test_canonical_url_removes_tracking(self):
         self.assertEqual(
             canonical_url("https://www.example.com/a/?utm_source=x&id=2#top"),

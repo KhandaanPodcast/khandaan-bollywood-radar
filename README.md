@@ -73,7 +73,7 @@ Use `yes/no`, `true/false`, or `1/0` for the two boolean fields. Names appear in
 Every non-empty response is validated. A row missing any required field is skipped and a
 row-numbered warning is printed; a sheet or CSV missing required columns is skipped with a
 warning listing those columns. Other valid submissions still appear in `dashboard.html`,
-`briefing.md`, `share_dashboard.html`, and `public/index.html`.
+`briefing.md`, `share_dashboard.html`, `public/index.html`, and the root `index.html`.
 
 Listener CSVs and Sheets may optionally add an `image_url` column containing a direct HTTPS poster or story-image URL. Google News and Reddit images are detected automatically when their feeds expose one.
 
@@ -91,6 +91,7 @@ Every run also creates:
 
 - `share_dashboard.html`: one portable, self-contained file for Dropbox, Google Drive, email, or chat.
 - `public/index.html`: the static public-site version for GitHub Pages or another static host.
+- `index.html`: an identical root copy for GitHub Pages deployments that serve the repository root.
 
 See [SHARING.md](SHARING.md) for upload and public-link instructions.
 

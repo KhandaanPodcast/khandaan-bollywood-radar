@@ -5,6 +5,7 @@ Each generator run creates three HTML variants:
 - `dashboard.html` is the normal local dashboard.
 - `share_dashboard.html` is a single self-contained file intended for file sharing.
 - `public/index.html` is the public-hosting-ready version.
+- `index.html` is the same public page at the repository root for GitHub Pages.
 
 Listener submissions are included in all three HTML files and in `briefing.md`. These are
 static snapshots: new Google Form responses appear only after the generator is run again.
@@ -34,7 +35,7 @@ The share export contains its CSS, scripts, and successfully fetched images insi
 GitHub Pages is the simplest option for a normal public web URL.
 
 1. Create or choose a GitHub repository.
-2. Put the generated `public/index.html` at the root of the branch or folder used by GitHub Pages.
+2. Use the generated root `index.html` when GitHub Pages serves the repository root. Keep `public/index.html` for other hosts or portable deployment.
 3. In the repository settings, open **Pages** and select that branch and folder as the publishing source.
 4. Wait for GitHub to show the published URL, commonly `https://USERNAME.github.io/REPOSITORY/`.
 5. Add that URL to `.env`:

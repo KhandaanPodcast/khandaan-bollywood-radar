@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -29,6 +30,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dashboard", default="dashboard.html", help="Primary HTML dashboard path")
     parser.add_argument("--share-output", default="share_dashboard.html", help="Single-file static share export")
     parser.add_argument("--public-output", default="public/index.html", help="Public-hosting-ready page")
+    parser.add_argument("--root-output", default="index.html", help="GitHub Pages homepage at the repository root")
     parser.add_argument("--public-url", default="", help="Hosted dashboard URL used by the Share button")
     parser.add_argument("--no-ai", action="store_true", help="Write a briefing without calling OpenAI")
     parser.add_argument("--offline", action="store_true", help="Skip Google News and Reddit network calls")
@@ -73,11 +75,13 @@ def main() -> None:
         dashboard = _resolve(Path.cwd(), args.dashboard)
         share_output = _resolve(Path.cwd(), args.share_output)
         public_output = _resolve(Path.cwd(), args.public_output)
+        root_output = _resolve(Path.cwd(), args.root_output)
         public_url = args.public_url or os.getenv("DASHBOARD_PUBLIC_URL", "")
         output.parent.mkdir(parents=True, exist_ok=True)
         dashboard.parent.mkdir(parents=True, exist_ok=True)
         share_output.parent.mkdir(parents=True, exist_ok=True)
         public_output.parent.mkdir(parents=True, exist_ok=True)
+        root_output.parent.mkdir(parents=True, exist_ok=True)
         render_briefing(output, news, reddit, x_items, submissions, editorial)
         render_dashboard(
             dashboard, news, reddit, x_items, submissions, markdown_path=output,
@@ -91,9 +95,11 @@ def main() -> None:
             public_output, news, reddit, x_items, submissions,
             self_contained=True, fetch_images=not args.offline, public_url=public_url,
         )
+        publish_root_homepage(public_output, root_output)
         print(f"Dashboard: {dashboard}")
         print(f"Share file: {share_output}")
         print(f"Public-ready page: {public_output}")
+        print(f"Site root page: {root_output}")
         print(f"Public URL: {public_url or 'set DASHBOARD_PUBLIC_URL after uploading'}")
         print(f"Markdown export: {output}")
         for warning in warnings:
@@ -101,3 +107,7 @@ def main() -> None:
     except (FileNotFoundError, ValueError, RuntimeError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         raise SystemExit(1) from exc
+
+
+def publish_root_homepage(public_output: Path, root_output: Path) -> None:
+    shutil.copyfile(public_output, root_output)
