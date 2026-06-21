@@ -2,7 +2,7 @@
 
 _What Bollywood fans are actually talking about._
 
-_Editorial planning brief · 21 June 2026, 11:49 BST_
+_Editorial planning brief · 21 June 2026, 15:18 BST_
 
 ## 1. Executive Summary
 
@@ -19,7 +19,7 @@ Audience read: **1 speculative item(s)** need caveats before microphones are swi
 
 ### [Debate over whether Ranbir Kapoor is now Bollywood's biggest male star](https://x.com/example/ranbir)
 **Discussion 67 · Priority 66 · Controversy 78 · Engagement 56 · Confidence 55**
-**Trend UP · submission age unknown · Discussion 6.7/10 · Fan-war 7.8/10 · VERIFY 5.5/10**
+**Trend UP · listener suggestion · Discussion 6.7/10 · Fan-war 7.8/10 · VERIFY 5.5/10**
 
 **Badges:** `Fan War`  
 **Output:** Patreon Discussion · **Temperature:** unclear · **Topic:** fan culture / controversy
@@ -53,7 +53,7 @@ _Source signal: X (manual)._
 
 ### [Trade analysts predicting an unusually strong Diwali box office](https://x.com/example/boxoffice)
 **Discussion 56 · Priority 71 · Controversy 18 · Engagement 56 · Confidence 55**
-**Trend NEW · submission age unknown · Discussion 5.5/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
+**Trend NEW · listener suggestion · Discussion 5.5/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
 
 **Badges:** `Industry Trend` · `Box Office`  
 **Output:** Patreon Discussion · **Temperature:** positive · **Topic:** industry / business
@@ -72,7 +72,7 @@ _Source signal: Listener submission / X._
 
 ### [Debate over whether Ranbir Kapoor is now Bollywood's biggest male star](https://x.com/example/ranbir)
 **Discussion 67 · Priority 66 · Controversy 78 · Engagement 56 · Confidence 55**
-**Trend UP · submission age unknown · Discussion 6.7/10 · Fan-war 7.8/10 · VERIFY 5.5/10**
+**Trend UP · listener suggestion · Discussion 6.7/10 · Fan-war 7.8/10 · VERIFY 5.5/10**
 
 **Badges:** `Fan War`  
 **Output:** Patreon Discussion · **Temperature:** unclear · **Topic:** fan culture / controversy
@@ -91,7 +91,7 @@ _Source signal: Listener submission / X._
 
 ### [Reddit thinks Ramayana VFX look unfinished](https://reddit.com/example)
 **Discussion 46 · Priority 60 · Controversy 18 · Engagement 57 · Confidence 49**
-**Trend NEW · submission age unknown · Discussion 4.6/10 · Fan-war 1.8/10 · VERIFY 4.9/10**
+**Trend NEW · listener suggestion · Discussion 4.6/10 · Fan-war 1.8/10 · VERIFY 4.9/10**
 
 **Badges:** `Film Release`  
 **Output:** Reel · **Temperature:** unclear · **Topic:** trailer / music / craft
@@ -129,7 +129,7 @@ _Source signal: X (manual)._
 
 ### [Debate over whether Ranbir Kapoor is now Bollywood's biggest male star](https://x.com/example/ranbir)
 **Discussion 67 · Priority 66 · Controversy 78 · Engagement 56 · Confidence 55**
-**Trend UP · submission age unknown · Discussion 6.7/10 · Fan-war 7.8/10 · VERIFY 5.5/10**
+**Trend UP · listener suggestion · Discussion 6.7/10 · Fan-war 7.8/10 · VERIFY 5.5/10**
 
 **Badges:** `Fan War`  
 **Output:** Patreon Discussion · **Temperature:** unclear · **Topic:** fan culture / controversy
@@ -165,7 +165,7 @@ _Source signal: X (manual)._
 
 ### [Trade analysts predicting an unusually strong Diwali box office](https://x.com/example/boxoffice)
 **Discussion 56 · Priority 71 · Controversy 18 · Engagement 56 · Confidence 55**
-**Trend NEW · submission age unknown · Discussion 5.5/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
+**Trend NEW · listener suggestion · Discussion 5.5/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
 
 **Badges:** `Industry Trend` · `Box Office`  
 **Output:** Patreon Discussion · **Temperature:** positive · **Topic:** industry / business
@@ -182,7 +182,7 @@ _Source signal: Listener submission / X._
 
 ### [Growing discussion about whether Maddock is replacing YRF as Bollywood's most reliable studio](https://x.com/example/maddock)
 **Discussion 53 · Priority 68 · Controversy 18 · Engagement 56 · Confidence 55**
-**Trend NEW · submission age unknown · Discussion 5.3/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
+**Trend NEW · listener suggestion · Discussion 5.3/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
 
 **Badges:** `Industry Trend`  
 **Output:** Patreon Discussion · **Temperature:** unclear · **Topic:** industry / business
@@ -218,7 +218,7 @@ _Source signal: X (manual)._
 
 ### [Debate over whether Ranbir Kapoor is now Bollywood's biggest male star](https://x.com/example/ranbir)
 **Discussion 67 · Priority 66 · Controversy 78 · Engagement 56 · Confidence 55**
-**Trend UP · submission age unknown · Discussion 6.7/10 · Fan-war 7.8/10 · VERIFY 5.5/10**
+**Trend UP · listener suggestion · Discussion 6.7/10 · Fan-war 7.8/10 · VERIFY 5.5/10**
 
 **Badges:** `Fan War`  
 **Output:** Patreon Discussion · **Temperature:** unclear · **Topic:** fan culture / controversy
@@ -236,7 +236,7 @@ _Listener signal: includes a Patreon member; credit: Asim._
 
 ### [Trade analysts predicting an unusually strong Diwali box office](https://x.com/example/boxoffice)
 **Discussion 56 · Priority 71 · Controversy 18 · Engagement 56 · Confidence 55**
-**Trend NEW · submission age unknown · Discussion 5.5/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
+**Trend NEW · listener suggestion · Discussion 5.5/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
 
 **Badges:** `Industry Trend` · `Box Office`  
 **Output:** Patreon Discussion · **Temperature:** positive · **Topic:** industry / business
@@ -254,7 +254,7 @@ _Listener signal: includes a Patreon member; credit: Asim._
 
 ### [Growing discussion about whether Maddock is replacing YRF as Bollywood's most reliable studio](https://x.com/example/maddock)
 **Discussion 53 · Priority 68 · Controversy 18 · Engagement 56 · Confidence 55**
-**Trend NEW · submission age unknown · Discussion 5.3/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
+**Trend NEW · listener suggestion · Discussion 5.3/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
 
 **Badges:** `Industry Trend`  
 **Output:** Patreon Discussion · **Temperature:** unclear · **Topic:** industry / business
@@ -272,7 +272,7 @@ _Listener signal: includes a Patreon member; credit: Asim._
 
 ### [Viewers arguing OTT releases are hurting cinema culture](https://reddit.com/r/bollywood/ott)
 **Discussion 49 · Priority 56 · Controversy 18 · Engagement 46 · Confidence 49**
-**Trend NEW · submission age unknown · Discussion 4.9/10 · Fan-war 1.8/10 · VERIFY 4.9/10**
+**Trend NEW · listener suggestion · Discussion 4.9/10 · Fan-war 1.8/10 · VERIFY 4.9/10**
 
 **Badges:** `Industry Trend` · `Streaming`  
 **Output:** Newsletter · **Temperature:** unclear · **Topic:** industry / business
@@ -290,7 +290,7 @@ _Listener signal: single submission; credit: Asim._
 
 ### [Reddit thinks Ramayana VFX look unfinished](https://reddit.com/example)
 **Discussion 46 · Priority 60 · Controversy 18 · Engagement 57 · Confidence 49**
-**Trend NEW · submission age unknown · Discussion 4.6/10 · Fan-war 1.8/10 · VERIFY 4.9/10**
+**Trend NEW · listener suggestion · Discussion 4.6/10 · Fan-war 1.8/10 · VERIFY 4.9/10**
 
 **Badges:** `Film Release`  
 **Output:** Reel · **Temperature:** unclear · **Topic:** trailer / music / craft
@@ -308,7 +308,7 @@ _Listener signal: includes a Patreon member; credit: Asim._
 
 ### [Fans debating whether Saiyaara proves Bollywood audiences want romance again](https://x.com/example/saiyaara)
 **Discussion 44 · Priority 58 · Controversy 18 · Engagement 58 · Confidence 55**
-**Trend NEW · submission age unknown · Discussion 4.3/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
+**Trend NEW · listener suggestion · Discussion 4.3/10 · Fan-war 1.8/10 · VERIFY 5.5/10**
 
 **Badges:** `No badge`  
 **Output:** Newsletter · **Temperature:** unclear · **Topic:** general Bollywood
@@ -326,7 +326,7 @@ _Listener signal: includes a Patreon member; credit: Asim._
 
 ### [Speculation about Shah Rukh Khan's next project after King](https://reddit.com/r/BollyBlindsNGossip/srk)
 **Discussion 43 · Priority 43 · Controversy 30 · Engagement 46 · Confidence 21**
-**Trend DOWN · submission age unknown · Discussion 4.3/10 · Fan-war 3.0/10 · RUMOUR 2.1/10**
+**Trend DOWN · listener suggestion · Discussion 4.3/10 · Fan-war 3.0/10 · RUMOUR 2.1/10**
 
 **Badges:** `Casting` · `Rumour`  
 **Output:** Ignore · **Temperature:** speculative · **Topic:** casting / production
@@ -344,7 +344,7 @@ _Listener signal: single submission; credit: Asim._
 
 ### [Discussion on whether audiences care less about nepotism than they did in 2020](https://reddit.com/r/bollywood/nepo)
 **Discussion 43 · Priority 45 · Controversy 34 · Engagement 46 · Confidence 49**
-**Trend NEW · submission age unknown · Discussion 4.3/10 · Fan-war 3.4/10 · VERIFY 4.9/10**
+**Trend NEW · listener suggestion · Discussion 4.3/10 · Fan-war 3.4/10 · VERIFY 4.9/10**
 
 **Badges:** `No badge`  
 **Output:** Newsletter · **Temperature:** unclear · **Topic:** general Bollywood
@@ -364,7 +364,7 @@ _Listener signal: single submission; credit: Asim._
 
 ### [Speculation about Shah Rukh Khan's next project after King](https://reddit.com/r/BollyBlindsNGossip/srk)
 **Discussion 43 · Priority 43 · Controversy 30 · Engagement 46 · Confidence 21**
-**Trend DOWN · submission age unknown · Discussion 4.3/10 · Fan-war 3.0/10 · RUMOUR 2.1/10**
+**Trend DOWN · listener suggestion · Discussion 4.3/10 · Fan-war 3.0/10 · RUMOUR 2.1/10**
 
 **Badges:** `Casting` · `Rumour`  
 **Output:** Ignore · **Temperature:** speculative · **Topic:** casting / production

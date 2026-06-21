@@ -4,6 +4,7 @@ import csv
 import io
 import os
 import re
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -18,6 +19,7 @@ REQUIRED_COLUMNS = {
 }
 
 HEADER_ALIASES = {
+    "timestamp": "submitted_at",
     "briefly explain what happened": "summary",
     "source platform": "source_platform",
     "why is this interesting controversial or worth discussing": "why_it_matters",
@@ -36,7 +38,7 @@ def _as_bool(value: str) -> bool:
 def _canonical_header(header: str) -> str:
     normalized = " ".join(re.sub(r"[^a-z0-9]+", " ", header.strip().lower()).split())
     canonical = normalized.replace(" ", "_")
-    if canonical in REQUIRED_COLUMNS or canonical == "image_url":
+    if canonical in REQUIRED_COLUMNS or canonical in {"image_url", "submitted_at"}:
         return canonical
     if normalized.startswith("story link"):
         return "story_link"
@@ -115,9 +117,30 @@ def load_submissions(source: str, base_dir: Path, *, warnings: list[str] | None 
                 credit_permission=_as_bool(values["credit_permission"]),
                 patreon_member=_as_bool(values["patreon_member"]),
                 image_url=values.get("image_url", ""),
+                submitted_at=_parse_timestamp(values.get("submitted_at", "")),
             )
         )
     return submissions
+
+
+def _parse_timestamp(value: str) -> datetime | None:
+    if not value:
+        return None
+    normalized = value.strip().replace("Z", "+00:00")
+    try:
+        return datetime.fromisoformat(normalized)
+    except ValueError:
+        pass
+    for pattern in (
+        "%d/%m/%Y %H:%M:%S", "%d/%m/%Y %H:%M",
+        "%m/%d/%Y %H:%M:%S", "%m/%d/%Y %H:%M",
+        "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M",
+    ):
+        try:
+            return datetime.strptime(normalized, pattern)
+        except ValueError:
+            continue
+    return None
 
 
 def group_submissions(items: list[Submission]) -> list[Submission]:
@@ -132,6 +155,10 @@ def group_submissions(items: list[Submission]) -> list[Submission]:
                 existing.submitters.append(item.submitter_name)
             if len(item.why_it_matters) > len(existing.why_it_matters):
                 existing.why_it_matters = item.why_it_matters
+            if item.submitted_at and (
+                not existing.submitted_at or item.submitted_at.timestamp() > existing.submitted_at.timestamp()
+            ):
+                existing.submitted_at = item.submitted_at
         else:
             item.submitters = [item.submitter_name] if item.credit_permission else []
             groups[key] = item

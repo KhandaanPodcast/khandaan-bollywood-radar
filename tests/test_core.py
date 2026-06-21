@@ -71,6 +71,7 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(result[0].summary, "Audience debate")
         self.assertTrue(result[0].credit_permission)
         self.assertTrue(result[0].patreon_member)
+        self.assertEqual(result[0].submitted_at, datetime(2026, 6, 21, 10, 0))
         self.assertEqual(
             warnings,
             ["Listener submission row 3 skipped; missing required fields: summary"],
@@ -240,21 +241,57 @@ class CoreTests(unittest.TestCase):
             render_dashboard(output, [breaking, ignored], [], [], [reel], markdown_path=markdown)
             text = output.read_text(encoding="utf-8")
         for value in (
-            "If We Recorded Tonight", "Best Reel Opportunities", "Best Patreon Discussions",
-            "Stories To Ignore", "HIGH INTEREST", "FAN WAR", "PATREON", "BREAKING",
-            "REEL IDEA", "PODCAST", "priority-ring", "exports/briefing.md",
-            "poster.jpg", "UP", "under 1h old", "Discussion /10", "Fan-war /10",
+            "If We Recorded Tonight", "Trending Stories", "Fan War Watch", "Listener Submissions",
+            "Best Reel Opportunities", "Best Patreon Discussions", "Industry Trend Watch",
+            "HIGH INTEREST", "FAN WAR", "PATREON", "BREAKING",
+            "REEL IDEA", "PODCAST", "editorial-meta", "exports/briefing.md",
+            "poster.jpg", "UP", "under 1h old", "Discussion", "Heat",
             "CONFIRMED SIGNAL", "Open source", "Copy podcast notes", "Copy reel idea",
             "Copy Patreon post", "data-copy-target", "PODCAST NOTES", "REEL IDEA",
             "PATREON POST", "fallbackCopy", "KHANDAAN", "BOLLYWOOD <em>RADAR</em>",
-            "What Bollywood fans are <em>actually talking about.</em>",
+            "What Bollywood fans are talking about <em>this week</em>",
             "The stories, debates, fan wars and industry shifts shaping Bollywood this week. Powered by news, Reddit discussions, X conversations and audience submissions.",
             "Bollywood news, Bollywood Reddit, Bollywood gossip, Bollywood box office, Hindi cinema, Bollywood podcast, Khandaan Podcast, Bollywood discussions, Bollywood trends",
             "Khandaan Bollywood Radar combines news, fan discussions, Reddit conversations, X chatter and listener submissions to surface the Bollywood stories worth talking about.",
             "Produced by Khandaan: A Bollywood Podcast", "https://www.youtube.com/@KhandaanPodcast",
         ):
             self.assertIn(value, text)
+        for retired in ("CONTENT PLANNING DASHBOARD", "All Ranked Stories", "Stories To Ignore"):
+            self.assertNotIn(retired, text)
         self.assertNotIn("<script src=", text)
+
+    def test_editorial_dashboard_section_ordering(self):
+        discussion_lead = Story(
+            "Discussion lead", "https://example.com/discussion", "manual",
+            discussion_score=90, controversy_score=20, priority_score=70,
+            output_recommendation="Main Episode", khandaan_take="Lead the show.",
+        )
+        controversy_lead = Story(
+            "Controversy lead", "https://example.com/controversy", "manual",
+            discussion_score=60, controversy_score=95, priority_score=65,
+            output_recommendation="Main Episode", khandaan_take="Handle with care.",
+        )
+        older = Submission(
+            "https://example.com/older", "Older suggestion", "Form", "Older", "A", True, False,
+            discussion_score=80, output_recommendation="Main Episode", khandaan_take="Older take.",
+            submitted_at=datetime(2026, 6, 19, 10, 0),
+        )
+        newer = Submission(
+            "https://example.com/newer", "Newer suggestion", "Form", "Newer", "B", True, False,
+            discussion_score=30, output_recommendation="Main Episode", khandaan_take="Newer take.",
+            submitted_at=datetime(2026, 6, 21, 10, 0),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "dashboard.html"
+            render_dashboard(output, [controversy_lead, discussion_lead], [], [], [older, newer])
+            text = output.read_text(encoding="utf-8")
+
+        trending = text.split('id="trending"', 1)[1].split('id="fan-war"', 1)[0]
+        fan_war = text.split('id="fan-war"', 1)[1].split('id="listener-submissions"', 1)[0]
+        listeners = text.split('id="listener-submissions"', 1)[1].split('id="reels"', 1)[0]
+        self.assertLess(trending.index("Discussion lead"), trending.index("Controversy lead"))
+        self.assertLess(fan_war.index("Controversy lead"), fan_war.index("Discussion lead"))
+        self.assertLess(listeners.index("Newer suggestion"), listeners.index("Older suggestion"))
 
     def test_story_age_and_trend_heuristics(self):
         recent = Story(
@@ -286,7 +323,7 @@ class CoreTests(unittest.TestCase):
         for marker in (
             "Share dashboard", "Download HTML", "shareDashboard", "downloadDashboard",
             "navigator.share", "https://example.github.io/khandaan/", 'rel="canonical"',
-            "Static share edition", "@media (max-width:560px)", "viewport",
+            "Static share edition", "@media (max-width:559px)", "@media (min-width:700px)", "viewport",
             '<title>Khandaan Bollywood Radar</title>', 'name="keywords"',
             'property="og:title"', 'name="twitter:description"',
         ):
