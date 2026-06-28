@@ -41,6 +41,43 @@ def _rank_story(story: Story) -> float:
     return round(recency + engagement + (1.0 if story.summary else 0.0), 2)
 
 
+def _google_news_query(keyword: str) -> str:
+    lowered = keyword.lower()
+    if "bollywood" in lowered or "hindi cinema" in lowered:
+        return keyword
+    return f'"{keyword}" Bollywood'
+
+
+def _is_bollywood_relevant(story: Story, keyword: str) -> bool:
+    text = " ".join(re.findall(r"[a-z0-9]+", f"{story.title} {story.summary}".lower()))
+    padded = f" {text} "
+    anchors = {
+        "bollywood", "hindi cinema", "film", "movie", "cinema", "actor", "actress",
+        "director", "producer", "box office", "casting", "trailer", "sequel", "studio",
+        "yrf", "netflix", "prime video",
+    }
+    if any(f" {anchor} " in padded for anchor in anchors):
+        return True
+    normalized_keyword = " ".join(re.findall(r"[a-z0-9]+", keyword.lower()))
+    generic_keywords = {
+        "bollywood", "hindi cinema", "bollywood box office", "bollywood casting",
+        "bollywood controversy", "netflix india bollywood", "prime video india bollywood",
+    }
+    return normalized_keyword not in generic_keywords and f" {normalized_keyword} " in padded
+
+
+def _is_low_information_result(story: Story, keyword: str) -> bool:
+    headline = story.title.rsplit(" - ", 1)[0]
+    headline_tokens = set(_normalized_news_text(headline).split())
+    keyword_tokens = set(_normalized_news_text(keyword).split())
+    generic_additions = {"film", "latest", "movie", "movies", "news", "story", "update"}
+    return keyword_tokens.issubset(headline_tokens) and headline_tokens - keyword_tokens <= generic_additions
+
+
+def _normalized_news_text(text: str) -> str:
+    return " ".join(re.findall(r"[a-z0-9]+", text.lower()))
+
+
 def fetch_google_news(config: dict, timeout: int = 15) -> list[Story]:
     import feedparser
     import requests
@@ -50,9 +87,11 @@ def fetch_google_news(config: dict, timeout: int = 15) -> list[Story]:
     language = config.get("language", "en-IN")
     country = config.get("country", "IN")
     limit = int(config.get("max_items_per_keyword", 10))
+    max_age_hours = float(config.get("max_age_hours", 168))
     stories: list[Story] = []
     for keyword in config.get("keywords", ["Bollywood"]):
-        url = f"https://news.google.com/rss/search?q={quote_plus(keyword)}&hl={language}&gl={country}&ceid={country}:en"
+        query = _google_news_query(keyword)
+        url = f"https://news.google.com/rss/search?q={quote_plus(query)}&hl={language}&gl={country}&ceid={country}:en"
         response = requests.get(url, timeout=timeout, headers={"User-Agent": "KhandaanBollywoodRadar/0.1"})
         response.raise_for_status()
         feed = feedparser.parse(response.content)
@@ -73,7 +112,12 @@ def fetch_google_news(config: dict, timeout: int = 15) -> list[Story]:
                 image_url=_feed_image(entry),
             )
             story.score = _rank_story(story)
-            stories.append(story)
+            if (
+                story.recency_hours <= max_age_hours
+                and _is_bollywood_relevant(story, keyword)
+                and not _is_low_information_result(story, keyword)
+            ):
+                stories.append(story)
     return stories
 
 

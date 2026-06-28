@@ -4,9 +4,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterable, Union
 
+from .dashboard import Conversation, _story_clusters
 from .models import Story, Submission
-
-
 EditorialItem = Union[Story, Submission]
 
 
@@ -31,6 +30,28 @@ def _source(item: EditorialItem) -> str:
     return f"Listener submission / {item.source_platform or 'unknown source'}"
 
 
+def _editorial_label(item: EditorialItem) -> str:
+    if item.output_recommendation == "Main Episode" and item.discussion_score >= 65:
+        return "Essential"
+    if item.output_recommendation != "Ignore" and item.discussion_score >= 45:
+        return "Worth discussing"
+    if item.discussion_score >= 30:
+        return "Background"
+    return "Skip"
+
+
+def _bigger_trend(item: EditorialItem) -> str:
+    trends = {
+        "fan culture / controversy": "The way fandom turns taste, loyalty and disagreement into competing public identities.",
+        "industry / business": "Bollywood's shifting economics: who holds leverage, where audiences spend, and how films now find value.",
+        "trailer / music / craft": "The widening gap between a campaign's promise and the audience trust a film has actually earned.",
+        "casting / production": "The star system's search for safety through franchises, familiar pairings and announcement-led momentum.",
+        "release / promotion": "The battle for attention across a crowded theatrical and streaming calendar.",
+        "general Bollywood": "Which parts of the publicity cycle survive once novelty and first reactions have worn off.",
+    }
+    return trends.get(item.topic_category, trends["general Bollywood"])
+
+
 def _note(item: EditorialItem, *, listener_details: bool = False) -> list[str]:
     badges = " · ".join(f"`{badge}`" for badge in item.badges) or "`No badge`"
     if "Rumour" in item.badges or item.confidence_score < 40:
@@ -39,33 +60,62 @@ def _note(item: EditorialItem, *, listener_details: bool = False) -> list[str]:
         confidence = "CONFIRMED SIGNAL"
     else:
         confidence = "VERIFY"
+    why_it_matters = item.why_khandaan_should_care if isinstance(item, Story) else item.why_it_matters
     lines = [
         f"### {_link(_title(item), _url(item))}",
-        f"**Discussion {item.discussion_score:.0f} · Priority {item.priority_score:.0f} · Controversy {item.controversy_score:.0f} · Engagement {item.engagement_score:.0f} · Confidence {item.confidence_score:.0f}**",
-        f"**Trend {item.trend_direction.upper()} · {item.age_label} · Discussion {item.discussion_score / 10:.1f}/10 · Fan-war {item.controversy_score / 10:.1f}/10 · {confidence} {item.confidence_score / 10:.1f}/10**",
+        f"**{_editorial_label(item)}**",
         "",
-        f"**Badges:** {badges}  ",
-        f"**Output:** {item.output_recommendation} · **Temperature:** {item.audience_temperature} · **Topic:** {item.topic_category}",
+        f"**Why this matters:** {why_it_matters}",
         "",
-        f"**Khandaan Take:** {item.khandaan_take}",
+        f"**What bigger trend does it represent?** {_bigger_trend(item)}",
         "",
-        f"**Editorial note:** {item.editorial_angle}",
+        f"**Khandaan angle:** {item.khandaan_take}",
         "",
-        f"**Opening hook:** {item.suggested_hook}",
+        f"**Is it worth our airtime?** {_editorial_label(item)}",
         "",
-        f"**Patron poll:** {item.suggested_patron_poll}",
+        "<details>",
+        "<summary>Editorial Notes</summary>",
         "",
-        f"_Source signal: {_source(item)}._",
+        f"- Signal: {item.trend_direction.upper()} · {item.age_label} · {confidence}",
+        f"- Topic: {item.topic_category}",
+        f"- Recommended treatment: {item.output_recommendation}",
+        f"- Source badges: {badges}",
+        f"- Editorial angle: {item.editorial_angle}",
+        f"- Opening hook: {item.suggested_hook}",
+        f"- Source signal: {_source(item)}",
     ]
+    if isinstance(item, Story):
+        sources = item.source_summary
+        lines.extend([
+            f"**Story lifecycle:** {item.lifecycle}",
+            "",
+            "**Discussion questions:**",
+            *[f"- {question}" for question in item.discussion_questions],
+            "",
+            "**Related stories already in the dashboard:**",
+            *(
+                [
+                    f"- {_link(related.get('title', 'Untitled story'), related.get('url', ''))} "
+                    f"— {related.get('platform', 'Unknown source')}; {related.get('relationship', 'related metadata')}"
+                    for related in item.related_stories
+                ]
+                or ["- No related dashboard story matched this story's metadata."]
+            ),
+            "",
+            f"**Source summary:** Google News {sources['google_news']} · Reddit {sources['reddit']} · Listener {sources['listener']}",
+            "",
+            f"**Confidence explanation:** {item.confidence_explanation}",
+            "",
+        ])
+    if isinstance(item, Story) and item.ranking_reasons:
+        lines.extend([f"_Why ranked: {'; '.join(item.ranking_reasons)}._"])
     if listener_details and isinstance(item, Submission):
         flags = []
         if item.duplicate_count > 1:
             flags.append(f"submitted {item.duplicate_count} times")
-        if item.patreon_member:
-            flags.append("includes a Patreon member")
         credit = ", ".join(item.submitters) if item.submitters else "anonymous / no public credit"
         lines.extend([f"_Listener signal: {', '.join(flags) if flags else 'single submission'}; credit: {credit}._"])
-    return [*lines, ""]
+    return [*lines, "", "</details>", ""]
 
 
 def _section(title: str, items: Iterable[EditorialItem], *, listener_details: bool = False, empty: str = "No strong candidate today.") -> list[str]:
@@ -78,16 +128,60 @@ def _section(title: str, items: Iterable[EditorialItem], *, listener_details: bo
     return lines
 
 
+def _conversation_note(conversation: Conversation) -> list[str]:
+    lead = conversation.lead
+    if not isinstance(lead, Story):
+        return _note(lead, listener_details=True)
+    evidence = conversation.stories
+    prompts = lead.discussion_questions[:2]
+    return [
+        f"### {conversation.title}",
+        f"**{_editorial_label(lead)}**",
+        "",
+        f"**Why this matters:** {lead.why_khandaan_should_care}",
+        "",
+        f"**Khandaan angle:** {lead.khandaan_take}",
+        "",
+        "**Discussion prompts:**",
+        *[f"- {prompt}" for prompt in prompts],
+        "",
+        f"**Supporting evidence:** {conversation.evidence_count}",
+        *[f"- {_link(story.title, story.url)} — {story.platform}" for story in evidence],
+        "",
+        "<details>",
+        "<summary>Editorial Notes</summary>",
+        "",
+        f"- Bigger trend: {_bigger_trend(lead)}",
+        f"- Lifecycle: {lead.lifecycle}",
+        f"- Topic: {lead.topic_category}",
+        f"- Recommended treatment: {lead.output_recommendation}",
+        f"- Confidence: {lead.confidence_explanation}",
+        "",
+        "</details>",
+        "",
+    ]
+
+
+def _conversation_section(title: str, conversations: Iterable[Conversation], *, empty: str) -> list[str]:
+    selected = list(conversations)
+    lines = [title, ""]
+    if not selected:
+        return [*lines, f"_{empty}_", ""]
+    for conversation in selected:
+        lines.extend(_conversation_note(conversation))
+    return lines
+
+
 def _executive_summary(stories: list[Story], submissions: list[Submission]) -> list[str]:
     all_items: list[EditorialItem] = sorted([*stories, *submissions], key=lambda item: (item.discussion_score, item.priority_score), reverse=True)
     if not all_items:
         return ["No source material landed today. The useful editorial decision is to avoid manufacturing urgency."]
     lead = all_items[0]
-    hot = sum(item.discussion_score >= 60 for item in all_items)
+    essential = sum(_editorial_label(item) == "Essential" for item in all_items)
     speculative = sum(item.audience_temperature == "speculative" for item in all_items)
     return [
-        f"Today's board has **{len(all_items)} viable items**, with **{hot} scoring 60 or above for discussion**. "
-        f"The lead candidate is **{_title(lead)}** at **{lead.discussion_score:.0f}/100 discussion**: {_one_line(lead.editorial_angle)}",
+        f"This fortnight's briefing contains **{len(all_items)} viable items**, including **{essential} essential discussion(s)**. "
+        f"The lead conversation is **{_title(lead)}**: {_one_line(lead.editorial_angle)}",
         f"Audience read: **{speculative} speculative item(s)** need caveats before microphones are switched on. "
         "Prioritise stories with consequence, not merely volume; fandom noise is evidence of attention, not evidence of truth.",
     ]
@@ -101,37 +195,31 @@ def render_briefing(path: Path, news: list[Story], reddit: list[Story], x_items:
     sort_key = lambda item: (item.discussion_score, item.priority_score)
     stories = sorted([*news, *reddit, *x_items], key=sort_key, reverse=True)
     submissions = sorted(submissions, key=sort_key, reverse=True)
-    all_items: list[EditorialItem] = sorted([*stories, *submissions], key=sort_key, reverse=True)
-    patreon = [item for item in all_items if item.output_recommendation == "Patreon Discussion"][:1]
-    reels = [item for item in all_items if item.output_recommendation in {"Reel", "Shorts"}][:4]
-    podcast = [item for item in all_items if item.output_recommendation == "Main Episode"][:5]
-    fan_war = [item for item in all_items if "Fan War" in item.badges][:4]
-    industry = [item for item in all_items if "Industry Trend" in item.badges][:4]
-    parked = [item for item in all_items if item.output_recommendation == "Ignore"]
-    tonight = [item for item in all_items if item.output_recommendation != "Ignore"][:5]
+    all_items: list[EditorialItem] = [*stories, *submissions]
+    conversations = _story_clusters([item for item in stories if item.output_recommendation != "Ignore"])
+    priorities = conversations[:5]
+    bigger_picture = sorted(
+        conversations[5:],
+        key=lambda conversation: (
+            "Industry Trend" in conversation.lead.badges,
+            conversation.lead.discussion_score,
+            conversation.lead.priority_score,
+        ),
+        reverse=True,
+    )[:6]
+    background = [item for item in stories if _editorial_label(item) in {"Background", "Skip"}]
     takes = [
         f"- **{_link(_title(item), _url(item))}:** “{item.khandaan_take}”"
-        for item in all_items[:3]
+        for item in stories[:3]
     ] or ["_No takes yet. Even we need a story before we can have an opinion._"]
-    tonight_lines = ["## 11. If We Recorded Tonight", ""]
-    if tonight:
-        for index, item in enumerate(tonight, start=1):
-            tonight_lines.extend([
-                f"{index}. **{_link(_title(item), _url(item))}** — Discussion **{item.discussion_score:.0f}/100** · {item.output_recommendation}",
-                f"   {_one_line(item.khandaan_take)}",
-                "",
-            ])
-    else:
-        tonight_lines.extend(["_We would postpone the recording. No story currently earns the airtime._", ""])
-
     lines = [
         "# Khandaan Bollywood Radar",
         "",
-        "_What Bollywood fans are actually talking about._",
+        "_The conversations still worth having after the headlines._",
         "",
         f"_Editorial planning brief · {datetime.now().astimezone().strftime('%d %B %Y, %H:%M %Z')}_",
         "",
-        "## 1. Executive Summary",
+        "## 1. Editorial Note",
         "",
         *_executive_summary(stories, submissions),
         "",
@@ -139,20 +227,15 @@ def render_briefing(path: Path, news: list[Story], reddit: list[Story], x_items:
         "",
         *takes,
         "",
-        *_section("## 3. Top 3 Stories to Discuss", all_items[:3], empty="No story has earned the top table yet."),
-        *_section("## 4. Best Patreon Discussion", patreon, empty="Nothing currently justifies putting the good biscuits behind the paywall."),
-        *_section("## 5. Best Reel and Shorts Ideas", reels, empty="No item is visual or immediate enough for a short video today."),
-        *_section("## 6. Main Episode Candidates", podcast, empty="No additional item has enough room for a proper main-episode conversation."),
-        *_section("## 7. Fan War Watch", fan_war, empty="The fandom weather is unusually calm. Enjoy it responsibly."),
-        *_section("## 8. Industry Trend Watch", industry, empty="No clear industry pattern has emerged from today's inputs."),
-        *_section("## 9. Listener Submissions", submissions, listener_details=True, empty="No listener submissions collected."),
-        *_section("## 10. Ignore", parked, empty="Nothing has been ignored; every collected item has a current assignment."),
-        *tonight_lines,
+        *_conversation_section("## 3. Essential Conversations", priorities, empty="No conversation has earned a place in the briefing yet."),
+        *_conversation_section("## 4. The Bigger Picture", bigger_picture, empty="No wider pattern has emerged from this fortnight's inputs."),
+        *_section("## 5. From the Khandaan Audience", submissions, listener_details=True, empty="No listener submissions collected."),
+        *_section("## 6. Background Reading", background, empty="Nothing has been parked as background reading."),
         "---",
         "",
         "**About Khandaan Bollywood Radar**",
         "",
-        "Khandaan Bollywood Radar combines news, fan discussions, Reddit conversations, X chatter and listener submissions to surface the Bollywood stories worth talking about.",
+        "Khandaan Bollywood Radar is an editorial briefing that turns news, fan discussions, Reddit conversations, X chatter and listener submissions into conversations worth returning to.",
         "",
         "[Produced by Khandaan: A Bollywood Podcast](https://www.youtube.com/@KhandaanPodcast)",
     ]

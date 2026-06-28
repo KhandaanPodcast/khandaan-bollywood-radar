@@ -50,14 +50,7 @@ On Windows PowerShell:
 Copy-Item .env.example .env
 ```
 
-Open `.env` and add your OpenAI key:
-
-```dotenv
-OPENAI_API_KEY=your_openai_api_key
-OPENAI_MODEL=gpt-4.1-mini
-```
-
-Do not commit `.env` or share its contents. `OPENAI_API_KEY` is required for the real AI-assisted briefing. For a pipeline-only test without OpenAI, use `--no-ai`.
+Open `.env` and add Reddit credentials only if you plan to enable Reddit. Editorial briefing fields are generated locally from metadata and do not require an LLM key.
 
 ## 4. Get Reddit API credentials
 
@@ -171,7 +164,7 @@ A direct HTTPS CSV export URL also works. Private Google Sheets are not supporte
 
 ## 8. Run the briefing generator
 
-The sample local command that fetches configured sources, calls OpenAI, and generates both outputs is:
+The sample local command that fetches configured sources and generates both outputs is:
 
 ```bash
 python -m khandaan_radar --sources sources.yaml --output briefing.md
@@ -194,11 +187,11 @@ Open `share_dashboard.html` with Wi-Fi disabled to confirm that the layout, text
 Useful diagnostic runs:
 
 ```bash
-# Fetch live news and Reddit, but do not call OpenAI
-python -m khandaan_radar --no-ai
+# Fetch live news and Reddit
+python -m khandaan_radar
 
 # Test only local X and listener input processing
-python -m khandaan_radar --offline --no-ai
+python -m khandaan_radar --offline
 ```
 
 ## 9. Check successful output
@@ -228,9 +221,9 @@ The `briefing.md` export should contain all of these headings:
 10. `Ignore`
 11. `If We Recorded Tonight`
 
-For a fully configured live run, expect linked news items, Reddit discussions, manual X notes, and grouped listener stories arranged by editorial purpose rather than source. Every item should show 0–100 discussion, priority, controversy, engagement, and confidence scores; relevant badges; one of the six output recommendations; a conversational Khandaan Take; an editorial note; an opening hook; and a patron poll. Listener notes also preserve duplicate, Patreon-member, and permitted-credit signals without repeating the source CSV fields. The final recording shortlist should contain at most five items, ordered primarily by discussion score.
+For a fully configured live run, expect linked news items, Reddit discussions, manual X notes, and grouped listener stories arranged by editorial purpose rather than source. Every ranked story should show 0–100 scores plus its lifecycle, reason Khandaan should care, two or three discussion questions, related dashboard stories, Google News/Reddit/listener counts, and a confidence explanation. Listener notes preserve duplicate, Patreon-member, and permitted-credit signals. The final recording shortlist should contain at most five items, ordered primarily by discussion score.
 
-With `--offline --no-ai`, these decisions come from deterministic heuristics. With AI enabled, OpenAI enriches the editorial angles, hooks, and poll wording without changing the rule-based scores or assignments.
+All of these decisions come from deterministic metadata, watchlist, theme, recency, and source-relationship heuristics. The compatibility flag `--no-ai` is accepted but unnecessary.
 
 Warnings for one network source do not stop other sources from producing the file. Read any warning carefully if a section is empty.
 
@@ -247,14 +240,6 @@ python -m pip install -r requirements.txt
 ### `Source config not found`
 
 Run the command from the project directory, or pass the correct path with `--sources`.
-
-### `OPENAI_API_KEY is not set`
-
-Confirm the file is named exactly `.env`, not `.env.txt`, and that it contains a valid `OPENAI_API_KEY`. Alternatively, run with `--no-ai`.
-
-### OpenAI authentication, quota, or model error
-
-Check that the key is active, billing or usage limits permit the request, and `OPENAI_MODEL` names a model available to your account. Do not add quotes or spaces around the key.
 
 ### `Reddit is enabled but REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET are not set`
 

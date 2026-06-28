@@ -31,6 +31,17 @@ class Story:
     khandaan_take: str = ""
     image_url: str = ""
     trend_direction: str = "new"
+    ranking_reasons: list[str] = field(default_factory=list)
+    why_khandaan_should_care: str = ""
+    discussion_questions: list[str] = field(default_factory=list)
+    related_stories: list[dict[str, str]] = field(default_factory=list)
+    lifecycle: str = "Developing"
+    source_summary: dict[str, int] = field(default_factory=lambda: {
+        "google_news": 0,
+        "reddit": 0,
+        "listener": 0,
+    })
+    confidence_explanation: str = ""
 
     @property
     def recency_hours(self) -> float:

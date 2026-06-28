@@ -8,18 +8,129 @@ google_news:
     - Shah Rukh Khan
     - Salman Khan
     - Aamir Khan
+    - Bollywood box office
+    - Bollywood casting
+    - Bollywood controversy
+    - YRF
+    - Ranbir Kapoor
+    - Alia Bhatt
+    - Deepika Padukone
+    - Ramayana Bollywood
+    - Alpha YRF
+    - Netflix India Bollywood
+    - Prime Video India Bollywood
+    - Welcome to the Jungle Bollywood
+    - Dhamaal 4
+    - Ikka Netflix Bollywood
+    - Lahore 1947
+    - Awarapan 2
+    - Khosla Ka Ghosla 2
+    - VVan Force of the Forest
+    - Toxic Yash Bollywood
+    - Mirzapur The Film
+    - Daayra Meghna Gulzar
+    - Drishyam 3
+    - Raftaar Prime Video Bollywood
+    - Ranger Ajay Devgn
+    - King Shah Rukh Khan
+    - Maatrubhumi Salman Khan
+    - Punjab 95
+    - Haiwaan Akshay Kumar Saif Ali Khan
   max_items_per_keyword: 10
+  max_age_hours: 168
 
 reddit:
   enabled: true
   subreddits:
     - bollywood
     - BollyBlindsNGossip
+    - IndianCinema
   sort: hot
   limit_per_subreddit: 15
 
 x_inputs:
+  enabled: false
   file: x_inputs.md
+
+watchlists:
+  active_releases:
+    - {title: Welcome to the Jungle, release_date: 2026-06-26, priority: P2}
+    - {title: Alpha, aliases: [Alpha YRF], release_date: 2026-07-03, priority: P1}
+    - {title: Dhamaal 4, release_date: 2026-07-10, priority: P1}
+    - {title: Ikka, release_date: 2026-07-10, priority: P2}
+    - {title: The India Story, release_date: 2026-07-24, priority: P3}
+    - {title: Tera Yaar Hoon Main, release_date: 2026-07-31, priority: P3}
+    - {title: Lahore 1947, release_date: 2026-08-13, priority: P1}
+    - {title: Awarapan 2, release_date: 2026-08-14, priority: P1}
+    - {title: Khosla Ka Ghosla 2, release_date: 2026-08-20, priority: P1}
+    - {title: Toxic, aliases: [Toxic Yash], release_date: 2026-08-26, priority: P1}
+    - {title: VVan, aliases: [VVan Force of the Forest, VVan Force of the Forrest, Vavn], release_date: 2026-08-28, priority: P1}
+    - {title: Mirzapur The Film, aliases: [Mirzapur - The Film, "Mirzapur: The Film"], release_date: 2026-09-04, priority: P1}
+    - {title: Daayra, release_date: 2026-09-18, priority: P1}
+    - {title: Vibe, release_date: 2026-09-18, priority: P3}
+    - {title: Drishyam 3, release_date: 2026-10-02, priority: P1}
+    - {title: Raftaar, release_date: 2026-10-16, priority: P2}
+    - {title: Ramayana Part 1, aliases: [Ramayana, Valmiki Ramayana], release_date: 2026-11-05, priority: P1}
+    - {title: Ranger, release_date: 2026-12-04, priority: P2}
+    - {title: King, aliases: [King Shah Rukh Khan], release_date: 2026-12-24, priority: P1}
+    - {title: Maatrubhumi, priority: P1}
+    - {title: Punjab 95, priority: P1}
+    - {title: Haiwaan, priority: P1}
+    - {title: Addhure Hum Adhure Tum, priority: P2}
+    - {title: Baap, priority: P2}
+    - {title: Gandhari, priority: P2}
+    - {title: Goodachari 2, aliases: [G2], priority: P2}
+    - {title: Mahakali, priority: P2}
+    - {title: "Maharani: Queen of Queens", priority: P2}
+    - {title: V. Shantaram, aliases: [V Shantaram], priority: P2}
+  studios:
+    - {name: YRF, aliases: [Yash Raj Films]}
+    - Red Chillies Entertainment
+    - Excel Entertainment
+    - Panorama Studios
+    - Aamir Khan Productions
+    - Netflix India
+    - Prime Video India
+  talent:
+    - Shah Rukh Khan
+    - Ranbir Kapoor
+    - Alia Bhatt
+    - Ajay Devgn
+    - Salman Khan
+    - Akshay Kumar
+    - Deepika Padukone
+    - Yash
+    - Kareena Kapoor Khan
+    - Diljit Dosanjh
+    - Sunny Deol
+  industry_themes:
+    - {name: Star power, terms: [star power, superstar, stardom]}
+    - {name: Franchise fatigue, terms: [franchise fatigue, tired franchise]}
+    - {name: Sequel culture, terms: [sequel, part 2, part 3, part 4]}
+    - {name: South vs Bollywood, terms: [South vs Bollywood, pan-India, Hindi vs South]}
+    - {name: OTT vs cinema, terms: [OTT vs cinema, streaming vs theatres, streaming vs theaters]}
+    - {name: Theatrical experience, terms: [theatrical experience, big screen, cinema experience]}
+    - {name: Nepotism, terms: [nepotism, nepo baby, star kid]}
+    - {name: Female-led action films, terms: [female-led action, women-led action, heroine-led action]}
+    - {name: Bollywood nostalgia, terms: [nostalgia, comeback, reunion, legacy sequel]}
+    - {name: Studio consolidation, terms: [studio consolidation, merger, acquisition]}
+    - {name: Box office narratives, terms: [box office, opening day, collection, advance booking]}
+    - {name: Remakes and adaptations, terms: [remake, adaptation, reboot]}
+  ignore:
+    - {title: War 2, aliases: [War II], penalty: 20, allow_major_new_story: true}
+    - {title: Saiyaara, penalty: 20, allow_major_new_story: true}
+    - {title: Dhadak 2, penalty: 20, allow_major_new_story: true}
+    - {title: Cocktail 2, penalty: 8, allow_major_new_story: true}
+    - {title: Main Vaapas Aaunga, penalty: 8, allow_major_new_story: true}
+    - {title: Peddi, penalty: 8, allow_major_new_story: true}
+    - {title: Maa-Behen, aliases: [Maa Behen], penalty: 8, allow_major_new_story: true}
+    - {title: Bandar, penalty: 8, allow_major_new_story: true}
+    - {title: Hai Jawani Toh Ishq Hona Hai, penalty: 8, allow_major_new_story: true}
+    - {title: Bharat Bhhagya Viddhaata, penalty: 8, allow_major_new_story: true}
+    - {title: Governor, aliases: [Governor The Silent Saviour], penalty: 8, allow_major_new_story: true}
+  false_positive_exclusions:
+    - term: War 2
+      patterns: [World War 2, World War II, WW2, WWII, Second World War]
 
 listener_submissions:
   # LISTENER_SUBMISSIONS_URL overrides this local fallback when it is set.
@@ -27,6 +138,7 @@ listener_submissions:
   source: listener_submissions.csv
 
 briefing:
-  top_stories: 8
-  reddit_items: 6
+  top_stories: 15
+  max_per_google_keyword: 2
+  max_per_subreddit: 3
   listener_items: 8

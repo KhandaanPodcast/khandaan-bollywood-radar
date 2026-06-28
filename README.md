@@ -2,7 +2,7 @@
 
 _What Bollywood fans are actually talking about._
 
-A simple, local-first Python MVP that collects Bollywood news, Reddit discussion, manual X/Twitter notes, and listener submissions into a visual `dashboard.html`. A Markdown version remains available as `briefing.md` for export. OpenAI can enrich editorial angles, hooks, and Khandaan Takes.
+A simple, local-first Python MVP that collects Bollywood news, Reddit discussion, manual X/Twitter notes, and listener submissions into a visual `dashboard.html`. A Markdown version remains available as `briefing.md` for export. All editorial intelligence is generated deterministically from source metadata, watchlists, themes, and relationships between dashboard stories.
 
 For a complete local smoke test, see [TESTING.md](TESTING.md).
 
@@ -13,7 +13,8 @@ For a complete local smoke test, see [TESTING.md](TESTING.md).
 - Fetches Reddit posts through Reddit's official OAuth API.
 - Reads manually pasted X links or observations from `x_inputs.md` (it does not scrape X).
 - Deduplicates stories using canonical URLs and similar titles.
-- Scores every story and listener submission for discussion value, priority, controversy, engagement, and confidence; then adds badges, an output recommendation, a conversational Khandaan Take, an editorial angle, a hook, and a patron poll.
+- Scores every story and listener submission for discussion value, priority, controversy, engagement, and confidence; then adds badges and an output recommendation.
+- Turns every ranked story into an editorial briefing with a lifecycle, a metadata-based reason to care, discussion questions, related dashboard stories, source counts, and a confidence explanation.
 - Reads listener submissions from a local CSV, an HTTPS CSV export, or a public Google Sheet URL.
 - Groups duplicate submissions, highlights high-interest and Patreon-member items, and recommends Patreon, podcast, or reel treatment.
 - Builds a branded, self-contained visual dashboard and a Markdown export on every run.
@@ -29,7 +30,7 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Add `OPENAI_API_KEY` to `.env`. To enable Reddit, create a Reddit **script** application and add its client ID and secret too. Change the placeholder contact in `REDDIT_USER_AGENT` to a real address.
+To enable Reddit, create a Reddit **script** application and add its client ID and secret to `.env`. Change the placeholder contact in `REDDIT_USER_AGENT` to a real address.
 
 ## Configure sources
 
@@ -98,14 +99,14 @@ See [SHARING.md](SHARING.md) for upload and public-link instructions.
 Useful modes:
 
 ```bash
-# Exercise the complete local pipeline without network or OpenAI
-python -m khandaan_radar --offline --no-ai
+# Exercise the complete local pipeline without network
+python -m khandaan_radar --offline
 
 # Use another config or output location
 python -m khandaan_radar --sources my_sources.yaml --dashboard my_dashboard.html --output my_briefing.md
 ```
 
-The primary output is `dashboard.html`; `briefing.md` is generated alongside it. Individual network failures are reported as warnings so other available sources can still produce a dashboard. Without an OpenAI key, explicitly pass `--no-ai`; this keeps accidental silent degradation out of normal editorial runs.
+The primary output is `dashboard.html`; `briefing.md` is generated alongside it. Individual network failures are reported as warnings so other available sources can still produce a dashboard. The deprecated `--no-ai` flag remains accepted for compatibility but is no longer needed.
 
 ## Tests
 
@@ -113,4 +114,4 @@ The primary output is `dashboard.html`; `briefing.md` is generated alongside it.
 python3 -m unittest discover -s tests
 ```
 
-The rule-based editorial planner works with `--offline --no-ai`, including scoring and format recommendations. The MVP intentionally avoids a database, scheduler, X API dependency, and private Google credentials. It is designed to run by hand or from a local cron job and to keep its inputs inspectable.
+The metadata-based editorial planner works offline, including scoring, story intelligence, and format recommendations. The MVP intentionally avoids a database, scheduler, X API dependency, LLM dependency, and private Google credentials. It is designed to run by hand or from a local cron job and to keep its inputs inspectable.
