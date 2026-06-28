@@ -29,16 +29,23 @@ def deduplicate_stories(stories: list[Story], title_threshold: float = 0.88) -> 
     for story in sorted(stories, key=lambda item: item.score, reverse=True):
         url_key = canonical_url(story.url)
         title_key = normalized_title(story.title)
-        duplicate = url_key in seen_urls if url_key else False
-        if not duplicate and title_key:
-            duplicate = any(
-                SequenceMatcher(None, title_key, normalized_title(other.title)).ratio() >= title_threshold
-                for other in unique
+        duplicate_of = next(
+            (other for other in unique if url_key and canonical_url(other.url) == url_key),
+            None,
+        )
+        if duplicate_of is None and title_key:
+            duplicate_of = next(
+                (
+                    other for other in unique
+                    if SequenceMatcher(None, title_key, normalized_title(other.title)).ratio() >= title_threshold
+                ),
+                None,
             )
-        if duplicate:
+        if duplicate_of is not None:
+            duplicate_of.metadata["source_count"] = int(duplicate_of.metadata.get("source_count", 1)) + int(story.metadata.get("source_count", 1))
             continue
+        story.metadata["source_count"] = max(1, int(story.metadata.get("source_count", 1)))
         unique.append(story)
         if url_key:
             seen_urls.add(url_key)
     return unique
-

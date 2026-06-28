@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import math
 import re
+from datetime import date
 
+from .intelligence import confidence_explanation
 from .models import Story, Submission
 
 
@@ -42,6 +44,97 @@ def _contains(text: str, terms: set[str]) -> bool:
     lowered = text.lower()
     words = _words(text)
     return any(term in lowered if " " in term else term in words for term in terms)
+
+
+def _normalized(text: str) -> str:
+    return " ".join(re.findall(r"[a-z0-9]+", text.lower()))
+
+
+def _entry_name(entry: str | dict) -> str:
+    if isinstance(entry, dict):
+        return str(entry.get("title") or entry.get("name") or entry.get("term") or "")
+    return str(entry)
+
+
+def _entry_terms(entry: str | dict) -> list[str]:
+    name = _entry_name(entry)
+    aliases = entry.get("aliases", []) if isinstance(entry, dict) else []
+    terms = entry.get("terms", []) if isinstance(entry, dict) else []
+    return [term for term in [name, *aliases, *terms] if str(term).strip()]
+
+
+def _text_matches(text: str, terms: list[str], exclusions: list[str] | None = None) -> bool:
+    padded = f" {_normalized(text)} "
+    if any(_normalized(term) == "war 2" for term in terms):
+        exclusions = [*(exclusions or []), "World War 2", "World War II", "WW2", "WWII", "Second World War"]
+    if any(f" {_normalized(term)} " in padded for term in (exclusions or []) if _normalized(term)):
+        return False
+    return any(f" {_normalized(term)} " in padded for term in terms if _normalized(term))
+
+
+def _major_new_story(text: str) -> bool:
+    return _contains(text, {
+        "official", "confirmed", "announced", "trailer", "teaser", "release date", "casting",
+        "box office", "collection", "record", "controversy", "backlash", "censor", "banned",
+        "lawsuit", "flop", "hit", "reshoot", "delayed", "postponed",
+    })
+
+
+def _structured_watchlist_signals(text: str, watchlists: dict | list[str] | None) -> tuple[list[str], float, float]:
+    if not watchlists:
+        return [], 0.0, 0.0
+    if isinstance(watchlists, list):
+        matches = [_entry_name(item) for item in watchlists if _text_matches(text, _entry_terms(item))]
+        return matches, min(12.0, len(matches) * 6.0), 0.0
+
+    exclusion_map = {
+        _normalized(_entry_name(entry)): entry.get("patterns", [])
+        for entry in watchlists.get("false_positive_exclusions", [])
+        if isinstance(entry, dict)
+    }
+    matches = []
+    boost = 0.0
+    today = date.today()
+
+    for entry in watchlists.get("active_releases", []):
+        name = _entry_name(entry)
+        if not _text_matches(text, _entry_terms(entry), exclusion_map.get(_normalized(name), [])):
+            continue
+        release_date = entry.get("release_date") if isinstance(entry, dict) else None
+        if release_date:
+            try:
+                days_until = (date.fromisoformat(str(release_date)) - today).days
+            except ValueError:
+                days_until = None
+            if days_until is not None and days_until < 0:
+                continue
+        else:
+            days_until = None
+        priority = str(entry.get("priority", "P3")).upper() if isinstance(entry, dict) else "P3"
+        value = {"P1": 10.0, "P2": 6.0, "P3": 2.0}.get(priority, 2.0)
+        if days_until is not None:
+            value += 3.0 if days_until <= 30 else 2.0 if days_until <= 90 else 1.0 if days_until <= 180 else 0.0
+        matches.append(f"release: {name} ({priority})")
+        boost += value
+
+    for key, value in (("studios", 3.0), ("talent", 2.0), ("industry_themes", 3.0)):
+        for entry in watchlists.get(key, []):
+            name = _entry_name(entry)
+            if _text_matches(text, _entry_terms(entry), exclusion_map.get(_normalized(name), [])):
+                matches.append(f"{key.rstrip('s')}: {name}")
+                boost += value
+
+    penalty = 0.0
+    for entry in watchlists.get("ignore", []):
+        name = _entry_name(entry)
+        if not _text_matches(text, _entry_terms(entry), exclusion_map.get(_normalized(name), [])):
+            continue
+        if isinstance(entry, dict) and entry.get("allow_major_new_story", False) and _major_new_story(text):
+            matches.append(f"stale title with major new story: {name}")
+        else:
+            penalty += float(entry.get("penalty", 12.0)) if isinstance(entry, dict) else 12.0
+            matches.append(f"de-prioritised: {name}")
+    return list(dict.fromkeys(matches)), min(16.0, boost), min(24.0, penalty)
 
 
 def classify_topic(text: str) -> str:
@@ -121,6 +214,106 @@ def _consequence(category: str, badges: list[str]) -> float:
     return _clamp(base)
 
 
+def _editorial_signal_adjustment(text: str) -> tuple[float, float, list[str]]:
+    boost = 0.0
+    penalty = 0.0
+    reasons = []
+    positive_signals = (
+        ("controversy/backlash", {"controversy", "backlash", "boycott", "feud", "fan war"}, 6.0),
+        ("box-office consequence", {"box office", "advance booking", "collection", "opening day", "record"}, 6.0),
+        ("studio strategy", {"studio strategy", "distribution", "merger", "acquisition", "slate"}, 4.0),
+        ("franchise discussion", {"franchise", "sequel", "part 2", "part 3", "part 4", "reboot"}, 4.0),
+        ("star-power debate", {"star power", "stardom", "superstar", "biggest star"}, 4.0),
+    )
+    routine_signals = (
+        ("poster/photo release", {"poster", "photos", "wallpapers", "images", "first look photos"}, 10.0),
+        ("song release", {"song", "song released", "song out", "song from", "music video", "audio launch"}, 8.0),
+        ("BTS material", {"bts", "behind the scenes", "set photos"}, 7.0),
+        ("routine production update", {"additional shoot", "shoot begins", "shoot starts", "filming begins", "schedule update", "wraps shoot"}, 7.0),
+    )
+    for label, terms, value in positive_signals:
+        if _contains(text, terms):
+            boost += value
+            reasons.append(label)
+    for label, terms, value in routine_signals:
+        if _contains(text, terms):
+            penalty += value
+            reasons.append(f"lower value: {label}")
+    return min(14.0, boost), min(16.0, penalty), reasons
+
+
+def _why_khandaan_should_care(
+    text: str,
+    category: str,
+    controversy: float,
+    matches: list[str],
+) -> str:
+    lowered_matches = " ".join(matches).lower()
+    sentences = []
+    if controversy >= 70 or _contains(text, {"backlash", "controversy", "fan war", "boycott", "feud", "vs"}):
+        sentences.append("The story supports a clear debate about audience reaction and has measurable fan-war potential.")
+    if _contains(text, {"box office", "advance booking", "collection", "opening day", "record"}) or "box office narratives" in lowered_matches:
+        sentences.append("Its performance claims connect box-office narratives to expectations around stars, genres, or franchises.")
+    if _contains(text, {"studio", "strategy", "distribution", "merger", "acquisition"}) or "studio:" in lowered_matches:
+        sentences.append("The underlying decisions provide evidence for a discussion about studio strategy and control of Hindi-film production or distribution.")
+    if _contains(text, {"franchise", "sequel", "part 2", "part 3", "part 4", "reboot"}) or any(term in lowered_matches for term in ("franchise fatigue", "sequel culture")):
+        sentences.append("The title creates a concrete route into franchise fatigue, sequel culture, and the value of familiar intellectual property.")
+    if _contains(text, {"representation", "female-led", "women-led", "woman-led"}) or "female-led action films" in lowered_matches:
+        sentences.append("The casting or positioning supplies a specific representation question rather than a general promotional claim.")
+    if _contains(text, {"nostalgia", "comeback", "reunion", "legacy"}) or "bollywood nostalgia" in lowered_matches:
+        sentences.append("The story links Bollywood nostalgia to current audience demand and the commercial use of legacy talent or titles.")
+    if _contains(text, {"star power", "stardom", "superstar", "biggest star"}) or "talent:" in lowered_matches:
+        sentences.append("The named talent makes this useful for testing how star power shapes attention, marketing, and audience expectations.")
+    if not sentences:
+        fallback = {
+            "industry / business": "The metadata points to an industry implication involving financing, distribution, streaming, or theatrical performance.",
+            "casting / production": "The confirmed production details create a debate about casting logic and the project’s commercial positioning.",
+            "trailer / music / craft": "The released material provides a concrete basis for discussing craft, marketing, and audience expectations.",
+            "release / promotion": "The release information helps assess campaign timing and the competitive theatrical or streaming calendar.",
+        }.get(category, "The story has enough verified context to support a focused Bollywood discussion without relying on speculation.")
+        sentences.append(fallback)
+    return " ".join(list(dict.fromkeys(sentences))[:2])
+
+
+def _discussion_questions(category: str, temperature: str, matches: list[str]) -> list[str]:
+    questions = {
+        "fan culture / controversy": [
+            "What event or claim triggered the audience reaction shown in the source metadata?",
+            "Which parts of the debate are supported by reporting, and which come only from fandom activity?",
+        ],
+        "industry / business": [
+            "What do the reported numbers or deal terms reveal about the underlying business strategy?",
+            "Who gains leverage if this distribution, financing, or release decision succeeds?",
+        ],
+        "trailer / music / craft": [
+            "Which craft choices are visible in the released material, separate from the campaign claims?",
+            "What audience expectation is the marketing trying to establish before release?",
+        ],
+        "casting / production": [
+            "Which casting or production details are confirmed by the available sources?",
+            "How does the announced team fit the project, franchise, or current release strategy?",
+        ],
+        "awards / festivals": [
+            "What does the recognition measure, and which work or performance is actually being recognised?",
+            "How does this festival or award signal compare with the film's audience reception?",
+        ],
+        "release / promotion": [
+            "How does the announced timing fit the theatrical or streaming calendar?",
+            "What new information is present beyond the promotional announcement itself?",
+        ],
+    }.get(category, [
+        "What is confirmed by the available source metadata?",
+        "What consequence would make this story worth returning to on the podcast?",
+    ])
+    if matches:
+        questions.append(f"How does this update change the existing watchlist context for {matches[0].split(':', 1)[-1].strip()}?")
+    elif temperature == "speculative":
+        questions.append("What additional source would be needed before treating the claim as established?")
+    else:
+        questions.append("Does the source activity show a sustained discussion or only a short-lived headline spike?")
+    return questions[:3]
+
+
 def _recommend(category: str, badges: list[str], discussion: float, engagement: float, confidence: float, controversy: float, *, patreon: bool = False) -> str:
     if (confidence < 35 and discussion < 62) or discussion < 34:
         return "Ignore"
@@ -194,7 +387,7 @@ def _editorial_copy(title: str, category: str, temperature: str) -> tuple[str, s
     return angle, hook, poll, take
 
 
-def score_story(story: Story) -> Story:
+def score_story(story: Story, watchlist: dict | list[str] | None = None) -> Story:
     text = f"{story.title} {story.summary}"
     category = classify_topic(text)
     temperature = audience_temperature(text)
@@ -207,8 +400,10 @@ def score_story(story: Story) -> Story:
     controversy = _controversy(text, category, temperature)
     consequence = _consequence(category, badges)
     recency = _clamp(100.0 - story.recency_hours * 2.2)
-    priority = _clamp(recency * 0.28 + consequence * 0.32 + confidence * 0.24 + engagement * 0.16)
-    discussion = _clamp(consequence * 0.30 + controversy * 0.25 + engagement * 0.22 + confidence * 0.13 + priority * 0.10)
+    watchlist_matches, watchlist_bonus, watchlist_penalty = _structured_watchlist_signals(text, watchlist)
+    signal_boost, routine_penalty, signal_reasons = _editorial_signal_adjustment(text)
+    priority = _clamp(recency * 0.28 + consequence * 0.32 + confidence * 0.24 + engagement * 0.16 + watchlist_bonus + signal_boost - watchlist_penalty - routine_penalty)
+    discussion = _clamp(consequence * 0.30 + controversy * 0.25 + engagement * 0.22 + confidence * 0.13 + priority * 0.10 + watchlist_bonus * 0.65 + signal_boost * 0.75 - watchlist_penalty * 0.7 - routine_penalty * 0.8)
     recommendation = _recommend(category, badges, discussion, engagement, confidence, controversy)
 
     story.priority_score = priority
@@ -230,6 +425,30 @@ def score_story(story: Story) -> Story:
     story.audience_temperature = temperature
     story.best_use = _legacy_best_use(recommendation)
     story.editorial_angle, story.suggested_hook, story.suggested_patron_poll, story.khandaan_take = _editorial_copy(story.title, category, temperature)
+    story.metadata["watchlist_matches"] = watchlist_matches
+    story.metadata["editorial_signal_adjustment"] = round(signal_boost - routine_penalty, 1)
+    reasons = [f"{category} consequence {consequence:.0f}/100"]
+    if story.platform == "Google News":
+        reasons.append(f"news confidence {confidence:.0f}/100")
+    elif story.platform == "Reddit":
+        reasons.append(f"audience engagement {engagement:.0f}/100")
+    if recency >= 50:
+        reasons.append(f"recency {recency:.0f}/100")
+    if controversy >= 55:
+        reasons.append(f"controversy {controversy:.0f}/100")
+    if watchlist_matches:
+        reasons.append(f"watchlist: {', '.join(watchlist_matches)}")
+    if signal_reasons:
+        reasons.append(f"editorial signals: {', '.join(signal_reasons)}")
+    story.ranking_reasons = reasons
+    story.why_khandaan_should_care = _why_khandaan_should_care(text, category, controversy, watchlist_matches)
+    story.discussion_questions = _discussion_questions(category, temperature, watchlist_matches)
+    story.source_summary = {
+        "google_news": int(story.platform == "Google News"),
+        "reddit": int(story.platform == "Reddit"),
+        "listener": 0,
+    }
+    story.confidence_explanation = confidence_explanation(story)
     story.score = discussion
     return story
 
@@ -269,26 +488,82 @@ def score_submission(item: Submission) -> Submission:
     return item
 
 
-def rank_stories(items: list[Story]) -> list[Story]:
-    return sorted((score_story(item) for item in items), key=lambda item: (item.discussion_score, item.priority_score), reverse=True)
+def rank_stories(items: list[Story], watchlist: dict | list[str] | None = None) -> list[Story]:
+    return sorted((score_story(item, watchlist) for item in items), key=lambda item: (item.discussion_score, item.priority_score), reverse=True)
+
+
+TOPIC_STOPWORDS = {
+    "a", "an", "and", "after", "bollywood", "box", "collection", "day", "film", "for",
+    "from", "hindi", "in", "india", "indian", "live", "movie", "of", "office", "on",
+    "or", "over", "says", "said", "the", "to", "update", "with",
+}
+
+
+def _near_duplicate_topic(left: Story, right: Story) -> bool:
+    left_tokens = set(re.findall(r"[a-z0-9]+", left.title.lower())) - TOPIC_STOPWORDS
+    right_tokens = set(re.findall(r"[a-z0-9]+", right.title.lower())) - TOPIC_STOPWORDS
+    if not left_tokens or not right_tokens:
+        return False
+    shared = left_tokens & right_tokens
+    return len(shared) >= 3 and len(shared) / min(len(left_tokens), len(right_tokens)) >= 0.25
+
+
+def select_diverse_stories(
+    items: list[Story],
+    limit: int,
+    *,
+    max_per_google_keyword: int = 2,
+    max_per_subreddit: int = 3,
+) -> list[Story]:
+    selected = []
+    source_counts: dict[tuple[str, str], int] = {}
+    for item in items:
+        if any(_near_duplicate_topic(item, existing) for existing in selected):
+            continue
+        if item.platform == "Google News":
+            key = (item.platform, str(item.metadata.get("keyword", "unknown")))
+            cap = max_per_google_keyword
+        elif item.platform == "Reddit":
+            key = (item.platform, str(item.metadata.get("subreddit", "unknown")))
+            cap = max_per_subreddit
+        else:
+            key = (item.platform, "all")
+            cap = limit
+        if source_counts.get(key, 0) >= cap:
+            continue
+        selected.append(item)
+        source_counts[key] = source_counts.get(key, 0) + 1
+        if len(selected) == limit:
+            break
+    return selected
+
+
+def select_reel_opportunities(items: list[Story], limit: int = 5) -> list[Story]:
+    active = [item for item in items if item.output_recommendation != "Ignore"]
+    return sorted(
+        active,
+        key=lambda item: (
+            item.output_recommendation in {"Reel", "Shorts"},
+            item.topic_category == "trailer / music / craft",
+            item.engagement_score,
+            item.discussion_score,
+        ),
+        reverse=True,
+    )[:limit]
+
+
+def select_patreon_candidates(items: list[Story], limit: int = 5) -> list[Story]:
+    active = [item for item in items if item.output_recommendation != "Ignore"]
+    return sorted(
+        active,
+        key=lambda item: (
+            item.output_recommendation == "Patreon Discussion",
+            item.controversy_score * 0.55 + item.discussion_score * 0.45,
+            item.confidence_score,
+        ),
+        reverse=True,
+    )[:limit]
 
 
 def rank_submissions(items: list[Submission]) -> list[Submission]:
     return sorted((score_submission(item) for item in items), key=lambda item: (item.discussion_score, item.priority_score), reverse=True)
-
-
-def apply_ai_enrichment(items: list[Story], submissions: list[Submission], editorial: dict) -> None:
-    story_edits = editorial.get("story_enrichments", {})
-    submission_edits = editorial.get("submission_enrichments", {})
-    for item in items:
-        edit = story_edits.get(item.title, {})
-        item.editorial_angle = edit.get("editorial_angle") or item.editorial_angle
-        item.suggested_hook = edit.get("suggested_hook") or item.suggested_hook
-        item.suggested_patron_poll = edit.get("suggested_patron_poll") or item.suggested_patron_poll
-        item.khandaan_take = edit.get("khandaan_take") or item.khandaan_take
-    for item in submissions:
-        edit = submission_edits.get(item.summary, {})
-        item.editorial_angle = edit.get("editorial_angle") or item.editorial_angle
-        item.suggested_hook = edit.get("suggested_hook") or item.suggested_hook
-        item.suggested_patron_poll = edit.get("suggested_patron_poll") or item.suggested_patron_poll
-        item.khandaan_take = edit.get("khandaan_take") or item.khandaan_take

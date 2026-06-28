@@ -13,9 +13,10 @@ from .config import load_config
 from .dashboard import render_dashboard
 from .dedupe import deduplicate_stories
 from .fetchers import fetch_google_news, fetch_reddit, read_x_inputs
-from .scoring import apply_ai_enrichment, rank_stories, rank_submissions
+from .intelligence import enrich_story_intelligence
+from .scoring import rank_stories, rank_submissions, select_diverse_stories
 from .submissions import group_submissions, load_submissions, resolve_submission_source
-from .summarizer import fallback_editorial, generate_editorial
+from .summarizer import fallback_editorial
 
 
 def _resolve(base: Path, value: str) -> Path:
@@ -32,7 +33,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--public-output", default="public/index.html", help="Public-hosting-ready page")
     parser.add_argument("--root-output", default="index.html", help="GitHub Pages homepage at the repository root")
     parser.add_argument("--public-url", default="", help="Hosted dashboard URL used by the Share button")
-    parser.add_argument("--no-ai", action="store_true", help="Write a briefing without calling OpenAI")
+    parser.add_argument("--no-ai", action="store_true", help="Deprecated compatibility flag; editorial intelligence is always metadata-based")
     parser.add_argument("--offline", action="store_true", help="Skip Google News and Reddit network calls")
     return parser
 
@@ -54,23 +55,26 @@ def main() -> None:
                 reddit = fetch_reddit(config["reddit"])
             except Exception as exc:
                 warnings.append(f"Reddit skipped: {exc}")
-        x_path = _resolve(base_dir, config["x_inputs"]["file"])
-        x_items = read_x_inputs(x_path)
+        x_items = []
+        if config["x_inputs"].get("enabled", True):
+            x_path = _resolve(base_dir, config["x_inputs"]["file"])
+            x_items = read_x_inputs(x_path)
         submission_source = resolve_submission_source(config["listener_submissions"].get("source", ""))
         submissions = group_submissions(load_submissions(submission_source, base_dir, warnings=warnings)) if submission_source else []
 
-        news = rank_stories(deduplicate_stories(news))[: int(config["briefing"]["top_stories"])]
-        reddit = rank_stories(deduplicate_stories(reddit))[: int(config["briefing"]["reddit_items"])]
-        x_items = rank_stories(deduplicate_stories(x_items))
+        watchlists = config.get("watchlists") or config["manual_watchlist"].get("items", [])
+        ranked_stories = select_diverse_stories(
+            rank_stories([*deduplicate_stories(news), *deduplicate_stories(reddit)], watchlists),
+            int(config["briefing"]["top_stories"]),
+            max_per_google_keyword=int(config["briefing"].get("max_per_google_keyword", 2)),
+            max_per_subreddit=int(config["briefing"].get("max_per_subreddit", 3)),
+        )
+        news = [story for story in ranked_stories if story.platform == "Google News"]
+        reddit = [story for story in ranked_stories if story.platform == "Reddit"]
+        x_items = rank_stories(deduplicate_stories(x_items), watchlists)
         submissions = rank_submissions(submissions)[: int(config["briefing"]["listener_items"])]
-
-        if args.no_ai:
-            editorial = fallback_editorial()
-        elif not os.getenv("OPENAI_API_KEY"):
-            raise RuntimeError("OPENAI_API_KEY is not set. Add it to .env or run with --no-ai")
-        else:
-            editorial = generate_editorial(news, reddit, x_items, submissions)
-        apply_ai_enrichment([*news, *reddit, *x_items], submissions, editorial)
+        enrich_story_intelligence([*news, *reddit, *x_items], submissions)
+        editorial = fallback_editorial()
         output = _resolve(Path.cwd(), args.output)
         dashboard = _resolve(Path.cwd(), args.dashboard)
         share_output = _resolve(Path.cwd(), args.share_output)

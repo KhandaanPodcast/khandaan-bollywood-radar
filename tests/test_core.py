@@ -10,7 +10,10 @@ from khandaan_radar.briefing import render_briefing
 from khandaan_radar.cli import build_parser, publish_root_homepage
 from khandaan_radar.dashboard import render_dashboard
 from khandaan_radar.models import Story, Submission
-from khandaan_radar.scoring import rank_stories
+from khandaan_radar.fetchers import _google_news_query, _is_bollywood_relevant, _is_low_information_result
+from khandaan_radar.intelligence import enrich_story_intelligence
+from khandaan_radar.config import load_config
+from khandaan_radar.scoring import rank_stories, select_diverse_stories
 from khandaan_radar.submissions import group_submissions, load_submissions, resolve_submission_source
 from khandaan_radar.summarizer import fallback_editorial
 
@@ -40,7 +43,9 @@ class CoreTests(unittest.TestCase):
             Story("Aamir Khan announces a new film", "https://a.test/1", "news", score=2),
             Story("Aamir Khan announces new film", "https://b.test/2", "news", score=1),
         ]
-        self.assertEqual(len(deduplicate_stories(stories)), 1)
+        deduplicated = deduplicate_stories(stories)
+        self.assertEqual(len(deduplicated), 1)
+        self.assertEqual(deduplicated[0].metadata["source_count"], 2)
 
     def test_listener_csv_and_grouping(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -149,7 +154,7 @@ class CoreTests(unittest.TestCase):
 
             for output in [briefing, *dashboards]:
                 text = output.read_text(encoding="utf-8")
-                self.assertIn("Listener Submissions", text)
+                self.assertIn("From the Khandaan Audience", text)
                 self.assertIn("Listener story marker", text)
 
     def test_rule_based_story_scoring(self):
@@ -173,6 +178,163 @@ class CoreTests(unittest.TestCase):
         self.assertTrue(ranked[0].suggested_hook)
         self.assertTrue(ranked[0].suggested_patron_poll)
         self.assertTrue(ranked[0].khandaan_take)
+
+    def test_recording_prep_config_excludes_x_and_sets_requested_sources(self):
+        config, _ = load_config(Path(__file__).parents[1] / "sources.yaml")
+        self.assertFalse(config["x_inputs"]["enabled"])
+        self.assertEqual(config["briefing"]["top_stories"], 15)
+        self.assertIn("IndianCinema", config["reddit"]["subreddits"])
+        self.assertIn("Prime Video India Bollywood", config["google_news"]["keywords"])
+        releases = {item["title"]: item for item in config["watchlists"]["active_releases"]}
+        self.assertEqual(releases["VVan"]["priority"], "P1")
+        self.assertEqual(releases["Welcome to the Jungle"]["priority"], "P2")
+        self.assertIn("Franchise fatigue", [item["name"] for item in config["watchlists"]["industry_themes"]])
+
+    def test_watchlist_match_boosts_and_explains_ranking(self):
+        watched = Story("Ramayana production update", "https://example.com/watched", "Google News")
+        unwatched = Story("Unrelated production update", "https://example.com/unwatched", "Google News")
+        ranked = rank_stories([unwatched, watched], ["Ramayana"])
+        self.assertEqual(ranked[0].title, watched.title)
+        self.assertEqual(ranked[0].metadata["watchlist_matches"], ["Ramayana"])
+        self.assertIn("watchlist: Ramayana", ranked[0].ranking_reasons)
+
+    def test_structured_watchlist_priorities_and_stale_penalty(self):
+        watchlists = {
+            "active_releases": [
+                {"title": "VVan", "priority": "P1"},
+                {"title": "Welcome to the Jungle", "priority": "P2"},
+            ],
+            "studios": [], "talent": [], "industry_themes": [],
+            "ignore": [{"title": "Saiyaara", "penalty": 20}],
+            "false_positive_exclusions": [],
+        }
+        stories = rank_stories([
+            Story("VVan production update", "https://example.com/vvan", "Google News"),
+            Story("Welcome to the Jungle production update", "https://example.com/welcome", "Google News"),
+            Story("Saiyaara retrospective", "https://example.com/saiyaara", "Google News"),
+        ], watchlists)
+        self.assertEqual(stories[0].title, "VVan production update")
+        self.assertEqual(stories[-1].title, "Saiyaara retrospective")
+        self.assertIn("release: VVan (P1)", stories[0].metadata["watchlist_matches"])
+
+    def test_why_khandaan_should_care_is_metadata_based_and_two_sentences(self):
+        story = Story(
+            "Superstar sequel faces audience backlash after weak box office opening",
+            "https://example.com/debate",
+            "Google News",
+        )
+        scored = rank_stories([story])[0]
+        self.assertIn("fan-war potential", scored.why_khandaan_should_care)
+        self.assertIn("box-office narratives", scored.why_khandaan_should_care)
+        self.assertLessEqual(scored.why_khandaan_should_care.count("."), 2)
+
+    def test_story_intelligence_uses_dashboard_relationships_and_source_counts(self):
+        now = datetime.now(timezone.utc)
+        news = rank_stories([Story(
+            "Shah Rukh Khan sequel faces box office backlash",
+            "https://example.com/news",
+            "Google News",
+            summary="The confirmed sequel opening prompted audience debate.",
+            published_at=now,
+            metadata={"source_count": 3},
+        )])[0]
+        reddit = rank_stories([Story(
+            "Audience debates Shah Rukh Khan sequel box office",
+            "https://reddit.com/r/bollywood/comments/1",
+            "Reddit",
+            summary="Fans discuss the sequel opening and backlash.",
+            published_at=now,
+            metadata={"upvotes": 800},
+            comments=250,
+        )])[0]
+        listener = Submission(
+            "https://example.com/listener", "Shah Rukh Khan sequel box office debate", "Form",
+            "Listeners want the opening and backlash discussed", "Asha", True, False,
+            duplicate_count=2,
+        )
+
+        enrich_story_intelligence([news, reddit], [listener])
+
+        self.assertEqual(news.source_summary, {"google_news": 3, "reddit": 1, "listener": 2})
+        self.assertEqual(news.related_stories[0]["title"], reddit.title)
+        self.assertIn("Shared story terms", news.related_stories[0]["relationship"])
+        self.assertEqual(news.lifecycle, "Peaking")
+        self.assertEqual(len(news.discussion_questions), 3)
+        self.assertIn("3 Google News, 1 Reddit, 2 listener", news.confidence_explanation)
+
+    def test_story_lifecycle_covers_breaking_developing_and_fading(self):
+        now = datetime.now(timezone.utc)
+        breaking = rank_stories([Story(
+            "Official trailer released", "https://example.com/breaking", "Google News",
+            published_at=now,
+        )])[0]
+        developing = rank_stories([Story(
+            "Casting discussion continues", "https://example.com/developing", "Google News",
+        )])[0]
+        fading = rank_stories([Story(
+            "Old release update", "https://example.com/fading", "Google News",
+            published_at=datetime(2026, 1, 1, tzinfo=timezone.utc),
+        )])[0]
+
+        enrich_story_intelligence([breaking, developing, fading], [])
+
+        self.assertEqual(breaking.lifecycle, "Breaking")
+        self.assertEqual(developing.lifecycle, "Developing")
+        self.assertEqual(fading.lifecycle, "Fading")
+
+    def test_substantive_signals_outrank_routine_promotion(self):
+        substantive = Story(
+            "Franchise sequel faces audience backlash after box office opening",
+            "https://example.com/substantive",
+            "Google News",
+        )
+        routine = Story(
+            "Official sequel poster photos and BTS images released",
+            "https://example.com/routine",
+            "Google News",
+        )
+        ranked = rank_stories([routine, substantive])
+        self.assertEqual(ranked[0].title, substantive.title)
+        self.assertGreater(substantive.metadata["editorial_signal_adjustment"], routine.metadata["editorial_signal_adjustment"])
+
+    def test_ambiguous_news_terms_get_bollywood_context(self):
+        self.assertEqual(_google_news_query("War 2"), '"War 2" Bollywood')
+        self.assertEqual(_google_news_query("Bollywood box office"), "Bollywood box office")
+
+    def test_world_war_2_does_not_match_film_watchlist(self):
+        story = Story("The best World War 2 films", "https://example.com/world-war", "Google News")
+        scored = rank_stories([story], ["War 2"])[0]
+        self.assertEqual(scored.metadata["watchlist_matches"], [])
+
+    def test_google_news_relevance_gate_rejects_general_controversy(self):
+        general = Story("Exam faces backlash after disputed question", "", "Google News")
+        film = Story("Bollywood film faces backlash after casting change", "", "Google News")
+        self.assertFalse(_is_bollywood_relevant(general, "Bollywood controversy"))
+        self.assertTrue(_is_bollywood_relevant(film, "Bollywood controversy"))
+
+    def test_google_news_rejects_query_label_pages(self):
+        generic = Story("Bollywood movie controversy - ScoopWhoop", "", "Google News")
+        specific = Story("Actor responds to Bollywood controversy - Example", "", "Google News")
+        self.assertTrue(_is_low_information_result(generic, "Bollywood movie controversy"))
+        self.assertFalse(_is_low_information_result(specific, "Bollywood controversy"))
+
+    def test_recording_prep_selection_caps_repeated_feeds(self):
+        items = [
+            Story(f"Box office update {index}", f"https://example.com/{index}", "Google News", metadata={"keyword": "Bollywood box office"})
+            for index in range(4)
+        ]
+        items.append(Story("Casting update", "https://example.com/casting", "Google News", metadata={"keyword": "Bollywood casting"}))
+        selected = select_diverse_stories(items, 3, max_per_google_keyword=2)
+        self.assertEqual([item.title for item in selected], ["Box office update 0", "Box office update 1", "Casting update"])
+
+    def test_recording_prep_selection_consolidates_same_story_across_queries(self):
+        items = [
+            Story("Cocktail 2 day 1: Shahid Kapoor sequel opens", "https://example.com/one", "Google News", metadata={"keyword": "Bollywood box office"}),
+            Story("Cocktail 2 day 2: Shahid Kapoor film rises", "https://example.com/two", "Google News", metadata={"keyword": "Hindi cinema"}),
+            Story("Imtiaz Ali discusses Main Vaapas Aaunga", "https://example.com/three", "Google News", metadata={"keyword": "Bollywood"}),
+        ]
+        selected = select_diverse_stories(items, 3)
+        self.assertEqual([item.title for item in selected], [items[0].title, items[2].title])
 
     def test_dashboard_badges(self):
         story = Story(
@@ -200,15 +362,15 @@ class CoreTests(unittest.TestCase):
             render_briefing(output, stories, [], [], [], fallback_editorial())
             text = output.read_text(encoding="utf-8")
         required = [
-            "Executive Summary", "Khandaan Take", "Top 3 Stories to Discuss",
-            "Best Patreon Discussion", "Best Reel and Shorts Ideas", "Main Episode Candidates",
-            "Fan War Watch", "Industry Trend Watch", "Listener Submissions", "Ignore",
-            "If We Recorded Tonight", "Discussion", "Priority", "Controversy",
-            "Engagement", "Confidence", "Badges", "Output", "Editorial note",
-            "Opening hook", "Patron poll",
+            "Editorial Note", "Khandaan Take", "Essential Conversations",
+            "The Bigger Picture", "From the Khandaan Audience", "Background Reading",
+            "Worth discussing", "Why this matters", "Khandaan angle",
+            "Discussion prompts", "Supporting evidence", "Editorial Notes",
         ]
         for heading in required:
             self.assertIn(heading, text)
+        self.assertNotIn("If We Recorded Tonight", text)
+        self.assertNotIn("Discussion 7", text)
 
     def test_briefing_sorts_by_discussion_score(self):
         lower_priority = Story("High discussion", "", "manual", priority_score=20, discussion_score=90, output_recommendation="Main Episode", khandaan_take="Talk about this.")
@@ -217,7 +379,7 @@ class CoreTests(unittest.TestCase):
             output = Path(directory) / "briefing.md"
             render_briefing(output, [higher_priority, lower_priority], [], [], [], fallback_editorial())
             text = output.read_text(encoding="utf-8")
-        shortlist = text.split("## 11. If We Recorded Tonight", 1)[1]
+        shortlist = text.split("## 3. Essential Conversations", 1)[1].split("## 4. The Bigger Picture", 1)[0]
         self.assertLess(shortlist.index("High discussion"), shortlist.index("High priority"))
 
     def test_visual_dashboard_renders_locally(self):
@@ -255,24 +417,73 @@ class CoreTests(unittest.TestCase):
             render_dashboard(output, [breaking, ignored], [], [], [reel], markdown_path=markdown)
             text = output.read_text(encoding="utf-8")
         for value in (
-            "If We Recorded Tonight", "Trending Stories", "Fan War Watch", "Listener Submissions",
-            "Best Reel Opportunities", "Best Patreon Discussions", "Industry Trend Watch",
-            "HIGH INTEREST", "FAN WAR", "PATREON", "BREAKING",
-            "REEL IDEA", "PODCAST", "editorial-meta", "exports/briefing.md",
-            "poster.jpg", "UP", "under 1h old", "Discussion", "Heat",
-            "CONFIRMED SIGNAL", "Open source", "Copy podcast notes", "Copy reel idea",
-            "Copy Patreon post", "data-copy-target", "PODCAST NOTES", "REEL IDEA",
-            "PATREON POST", "fallbackCopy", "KHANDAAN", "BOLLYWOOD <em>RADAR</em>",
-            "What Bollywood fans are talking about <em>this week</em>",
-            "The stories, debates, fan wars and industry shifts shaping Bollywood this week. Powered by news, Reddit discussions, X conversations and audience submissions.",
+            "Essential Conversations", "The Bigger Picture", "From the Khandaan Audience",
+            "START HERE", "PATTERNS, NOT PULSES", "THE LISTENER&#x27;S DESK",
+            "Essential", "Worth discussing", "editorial-brief", "exports/briefing.md",
+            "poster.jpg", "under 1h old", "CONFIRMED SIGNAL", "Copy conversation notes",
+            "data-copy-target", "CONVERSATION NOTES", "fallbackCopy", "KHANDAAN", "BOLLYWOOD <em>RADAR</em>",
+            "The conversations still worth having <em>after the headlines</em>",
+            "A fortnightly editorial briefing on the Bollywood stories, debates and industry shifts still worth discussing.",
             "Bollywood news, Bollywood Reddit, Bollywood gossip, Bollywood box office, Hindi cinema, Bollywood podcast, Khandaan Podcast, Bollywood discussions, Bollywood trends",
-            "Khandaan Bollywood Radar combines news, fan discussions, Reddit conversations, X chatter and listener submissions to surface the Bollywood stories worth talking about.",
+            "Khandaan Bollywood Radar is an editorial briefing that turns news, fan discussions, Reddit conversations, X chatter and listener submissions into conversations worth returning to.",
             "Produced by Khandaan: A Bollywood Podcast", "https://www.youtube.com/@KhandaanPodcast",
+            "Why this matters", "Khandaan angle", "Discussion prompts", "Supporting evidence",
+            "Editorial Notes", "Story lifecycle", "Clustered articles", "Source summary", "Confidence explanation",
         ):
             self.assertIn(value, text)
-        for retired in ("CONTENT PLANNING DASHBOARD", "All Ranked Stories", "Stories To Ignore"):
+        for retired in ("CONTENT PLANNING DASHBOARD", "All Ranked Stories", "Stories To Ignore", "If We Recorded Tonight", "Trending Stories", "editorial-meta", "Why Khandaan should care", "Copy Patreon post"):
             self.assertNotIn(retired, text)
         self.assertNotIn("<script src=", text)
+
+    def test_related_articles_render_as_one_conversation_cluster(self):
+        stories = [
+            Story(
+                "Alpha trailer begins the campaign", "https://example.com/alpha-trailer", "Google News",
+                discussion_score=90, priority_score=80, output_recommendation="Main Episode",
+                topic_category="casting / production", why_khandaan_should_care="A female-led franchise would change YRF's tentpole strategy.",
+                khandaan_take="The question is whether the studio is building a character or merely a brand extension.",
+                discussion_questions=["What promise does the trailer make?", "Does the franchise framing expand the audience?"],
+                metadata={"watchlist_matches": ["release: Alpha (P1)"]},
+            ),
+            Story(
+                "Alpha casting discussion grows", "https://example.com/alpha-cast", "Google News",
+                discussion_score=70, priority_score=70, output_recommendation="Newsletter",
+                topic_category="casting / production", metadata={"watchlist_matches": ["release: Alpha (P1)"]},
+            ),
+            Story(
+                "Alpha release date confirmed", "https://example.com/alpha-date", "Google News",
+                discussion_score=60, priority_score=60, output_recommendation="Newsletter",
+                topic_category="release / promotion", metadata={"watchlist_matches": ["release: Alpha (P1)"]},
+            ),
+        ]
+        enrich_story_intelligence(stories, [])
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "dashboard.html"
+            render_dashboard(output, stories, [], [], [])
+            text = output.read_text(encoding="utf-8")
+        top = text.split('id="start-here"', 1)[1].split('id="bigger-picture"', 1)[0]
+        self.assertEqual(top.count('<article class="story-card">'), 1)
+        self.assertIn("What is the strategy behind Alpha?", top)
+        self.assertIn("Trailer coverage", top)
+        self.assertIn("Casting discussion", top)
+        self.assertIn("Release-date news", top)
+        self.assertIn('<p>Supporting evidence</p><span>3</span>', top)
+
+    def test_essential_conversations_are_capped_at_five(self):
+        stories = [
+            Story(
+                f"Distinct conversation {index}", f"https://example.com/distinct-{index}", "Google News",
+                discussion_score=90 - index, priority_score=80 - index,
+                output_recommendation="Main Episode", khandaan_take="A distinct editorial angle.",
+            )
+            for index in range(7)
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "dashboard.html"
+            render_dashboard(output, stories, [], [], [])
+            text = output.read_text(encoding="utf-8")
+        top = text.split('id="start-here"', 1)[1].split('id="bigger-picture"', 1)[0]
+        self.assertEqual(top.count('<article class="story-card">'), 5)
 
     def test_editorial_dashboard_section_ordering(self):
         discussion_lead = Story(
@@ -300,11 +511,9 @@ class CoreTests(unittest.TestCase):
             render_dashboard(output, [controversy_lead, discussion_lead], [], [], [older, newer])
             text = output.read_text(encoding="utf-8")
 
-        trending = text.split('id="trending"', 1)[1].split('id="fan-war"', 1)[0]
-        fan_war = text.split('id="fan-war"', 1)[1].split('id="listener-submissions"', 1)[0]
-        listeners = text.split('id="listener-submissions"', 1)[1].split('id="reels"', 1)[0]
-        self.assertLess(trending.index("Discussion lead"), trending.index("Controversy lead"))
-        self.assertLess(fan_war.index("Controversy lead"), fan_war.index("Discussion lead"))
+        priorities = text.split('id="start-here"', 1)[1].split('id="bigger-picture"', 1)[0]
+        listeners = text.split('id="listener-submissions"', 1)[1].split('</main>', 1)[0]
+        self.assertLess(priorities.index("Discussion lead"), priorities.index("Controversy lead"))
         self.assertLess(listeners.index("Newer suggestion"), listeners.index("Older suggestion"))
 
     def test_story_age_and_trend_heuristics(self):
